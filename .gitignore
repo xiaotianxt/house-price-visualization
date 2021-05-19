@@ -1,0 +1,11 @@
+*.ini
+*.csv
+.vscode
+.ipynb_checkpoints
+__pycache__
+*.pyc
+.idea/
+data/
+*.html
+*.csv
+log/log.txt
