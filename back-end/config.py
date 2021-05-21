@@ -1,10 +1,12 @@
 '''
 Author: 小田
 Date: 2021-05-19 21:06:18
-LastEditTime: 2021-05-19 21:07:27
+LastEditTime: 2021-05-19 21:21:25
 '''
 import configparser
 
-config = configparser.ConfigParser()
-config.read("config.ini")
-print(config.sections())
+
+class CONFIG():
+    _CONFIG = configparser.ConfigParser()
+    _CONFIG.read("config.ini")
+    DB = _CONFIG['db']
