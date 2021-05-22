@@ -9,3 +9,4 @@ data/
 *.html
 *.csv
 log/log.txt
+mongodb-ope

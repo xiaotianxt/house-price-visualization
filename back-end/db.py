@@ -1,7 +1,7 @@
 '''
 Author: 小田
 Date: 2021-05-19 21:05:42
-LastEditTime: 2021-05-20 13:04:13
+LastEditTime: 2021-05-21 21:54:11
 '''
 from config import CONFIG
 from pymongo import MongoClient
@@ -16,9 +16,13 @@ class db():
         self._db = self.client['lianjia']
         self.xiaoqu = self._db['xiaoqu']
         self.location = self._db['location']
+        self.today = self._db['today']
 
-    def geo_within(self, polygon):
-        return self.location.find({
+    def location_filter(self, query):
+        return self.location.find(query)
+
+    def location_geo_within(self, polygon):
+        return self.location_filter({
             'geometry': {
                 '$geoWithin': {
                     '$geometry': {
@@ -29,8 +33,8 @@ class db():
             }
         })
 
-    def geo_near(self, point, min_dis=0, max_dis=10):
-        return self.location.find({
+    def location_geo_near(self, point, min_dis=0, max_dis=10):
+        return self.location_filter({
             'geometry': {
                 "$near": {
                     "$geometry": {
@@ -43,22 +47,39 @@ class db():
             }
         })
 
-    def xiaoqu_price(self, location, date_range={}, price_range={}):
-        return self.xiaoqu.find({'$and': {[location, date_range, price_range]}}).sort('date')
+    def xiaoqu_filter(self, query):
+        return self.xiaoqu.find(query if isinstance(query, dict) else {"$and": query})
+
+    def xiaoqu_price(self, location):
+        return self.xiaoqu_filter(location).sort('date')
+
+    def today_filter(self, query):
+        return self.today.find(query if isinstance(query, dict) else {"$and": query})
+
+    def xiaoqu_price_range(self, location, date="today", min_price=0, max_price=0):
+        price = [{"price": {"$gt": min_price}}, {
+            "price": {"$lt": max_price}} if max_price != 0 else {}]
+        if date != "today":
+            return self.xiaoqu_filter([location, date, *price])
+        else:
+            return self.today_filter([location, *price])
 
 
 if __name__ == '__main__':
     from geometry import *
+
+    def result(items):
+        for item in items[:5]:
+            print(item)
+
     polygon = Polygon([[116.3, 38.7], [116.3, 39.7], [
         116.4, 39.7], [116.4, 38.7], [116.3, 38.7]])
-    db = db()
-    for item in db.geo_within(polygon)[:5]:
-        # print(item)
-        pass
-
     point = Point([116.3, 39.9])
-    for item in db.geo_near(point, max_dis=1000)[:5]:
-        print(item)
 
-    for item in db.xiaoqu_price({"area": "苏州桥", "xiaoqu": "1+1大厦"}):
-        print(item)
+    db = db()
+
+    # result(db.location_geo_within(polygon))
+
+    # result(db.location_geo_near(point, max_dis=1000))
+
+    result(db.xiaoqu_price_range(location={"city": "北京"}))
