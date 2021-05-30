@@ -1,7 +1,7 @@
 '''
 Author: 小田
 Date: 2021-05-19 21:05:42
-LastEditTime: 2021-05-21 21:54:11
+LastEditTime: 2021-05-30 21:58:37
 '''
 from config import CONFIG
 from pymongo import MongoClient
@@ -63,6 +63,13 @@ class db():
             return self.xiaoqu_filter([location, date, *price])
         else:
             return self.today_filter([location, *price])
+    # db.location.find({'properties.xiaoqu': /(\s\S)*华清嘉园(\s\S)*/})
+
+    def xiaoqu_name(self, xiaoqu):
+        return self.location.find({"properties.xiaoqu": {"$regex": f".*{xiaoqu}.*"}})
+
+    def today_name(self, xiaoqu):
+        return self.today.find({"properties.xiaoqu": {"$regex": f".*{xiaoqu}.*"}})
 
 
 if __name__ == '__main__':

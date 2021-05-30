@@ -1,7 +1,7 @@
 '''
 Author: 小田
 Date: 2021-05-19 21:00:00
-LastEditTime: 2021-05-22 00:32:12
+LastEditTime: 2021-05-30 21:59:09
 '''
 
 from geometry import *
@@ -25,3 +25,9 @@ class RequestHandler():
         polygon = Polygon(request['polygon']['coordinates'][0])
         print(list(self.db.location_geo_within(polygon)))
         return json.dumps(list(self.db.location_geo_within(polygon)), cls=JSONEncoder)
+
+    def query_within_xiaoqu_name(self, xiaoqu):
+        return json.dumps(list(self.db.xiaoqu_name(xiaoqu)), cls=JSONEncoder)
+
+    def query_within_today_name(self, xiaoqu):
+        return json.dumps(list(self.db.today_name(xiaoqu)), cls=JSONEncoder)

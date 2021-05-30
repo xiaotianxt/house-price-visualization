@@ -1,0 +1,32 @@
+// MongoDB Playground
+use("lianjia")
+db.today.aggregate([
+  {/**
+   * specifications: The fields to
+   *   include or exclude.
+   */
+  $project: {
+    _id: "$_id.oid",
+    properties: {
+      city: "$city",
+      "date": "$date",
+      "district": "$district",
+      "area": "$area",
+      "xiaoqu": "$xiaoqu",
+      "price": "$price",
+      "sale": "$sale",
+    },
+    "geometry": "$geometry"
+  }}
+  ,
+  {/**
+   * s3Url: A S3 URL to save the data.
+   * atlas: Parameters to save to Atlas.
+   */
+  $out: {
+    db: "lianjia", 
+    coll: "temp-today"
+  }}
+])
+db.today.drop();
+db.getCollection("temp-today").rename("today");

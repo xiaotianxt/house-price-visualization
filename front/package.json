@@ -1,0 +1,23 @@
+{
+  "name": "house-visualization-front",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "parcel index.html",
+    "build": "parcel build --public-url . index.html"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^5.0.1",
+    "coordtransform": "^2.1.2",
+    "currency-formatter": "^1.5.8",
+    "jquery": "^3.6.0",
+    "ol": "^6.5.0"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.5"
+  }
+}
