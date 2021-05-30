@@ -1,0 +1,95 @@
+<!--
+ * @Author: 小田
+ * @Date: 2021-05-29 14:09:12
+ * @LastEditTime: 2021-05-31 01:24:48
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, 
+  initial-scale=1.0, 
+  maximum-scale=1.0, 
+  user-scalable=no" />
+    <title>Map Viewer (3-column layout)</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+
+</head>
+
+<body>
+    <nav class="navbar navbar-fixed-top navbar-light bg-light" role="navigation">
+        <a class="navbar-brand" href="#">房屋价格可视化系统</a>
+        <ul class="navbar-nav">
+            <li class="navbar-item"><a href="#" class="nav-link">登录</a></li>
+        </ul>
+    </nav>
+
+    </nav>
+    <div id="map">
+    </div>
+    div.
+    <div class="col-4 sidebar sidebar-left float-left" id="accordion-left">
+        <div class="panel-group sidebar-body">
+            <div class="card">
+                <div class="card-header">
+                    查询结果
+                    <button class="close slide-submenu">
+                        <span aria-hidden="true">
+                            &times;
+                        </span>
+                    </button>
+                </div>
+                <div class="card-body bg-light pre-scrollable">
+
+                    <ul class="list-group" id="search-result-panel">
+
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-4 col-lg-3 sidebar sidebar-right float-right" id="accordion-right">
+        <div class="panel-group sidebar-body">
+            <div class="card">
+                <div class="card-header">
+                    小区查询
+                    <button type="button" class="close slide-submenu" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="xiaoqu-query" class="card-body bg-light pre-scrollable">
+                    <form id="xiaoqu-locate" role="xiaoqu-locate">
+                        <div class="input-group col-xs-1">
+                            <input type="text" class="form-control" placeholder="小区">
+                            <button type="submit" class="btn btn-secondary input-group-addon" role="button">
+                                搜索
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    </div>
+    <div class="mini-submenu mini-submenu-left float-left">
+        <div class="fa fa-info"></div>
+    </div>
+    <div class="mini-submenu mini-submenu-right search float-right">
+        <div class="fa fa-search"></div>
+    </div>
+    </div>
+    <script src="index.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.js"></script>
+
+</body>
+
+</html>

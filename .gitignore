@@ -10,7 +10,7 @@ __pycache__
 *.pyc
 .idea/
 data/
-*.html
 *.csv
 log/log.txt
 mongodb-ope
+lianjia-beike-spider
