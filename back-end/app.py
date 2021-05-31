@@ -1,7 +1,7 @@
 '''
 Author: 小田
 Date: 2021-05-19 15:21:48
-LastEditTime: 2021-05-30 21:59:20
+LastEditTime: 2021-05-31 19:34:05
 '''
 from flask import Flask, request, jsonify
 from handler import *
@@ -16,7 +16,6 @@ handler = RequestHandler()
 def main():
     data = request.get_json()
     if data['request'] == "QUERY_WITHIN_POLYGON":
-
         return handler.query_within_polygon(data), 200, {'content-type': 'application/json'}
 
 

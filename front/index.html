@@ -1,7 +1,7 @@
 <!--
  * @Author: 小田
  * @Date: 2021-05-29 14:09:12
- * @LastEditTime: 2021-05-31 01:24:48
+ * @LastEditTime: 2021-05-31 20:17:42
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -13,7 +13,7 @@
   initial-scale=1.0, 
   maximum-scale=1.0, 
   user-scalable=no" />
-    <title>Map Viewer (3-column layout)</title>
+    <title>房屋价格可视化系统</title>
     <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.css" rel="stylesheet">
     <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
@@ -32,10 +32,9 @@
     </nav>
     <div id="map">
     </div>
-    div.
-    <div class="col-4 sidebar sidebar-left float-left" id="accordion-left">
-        <div class="panel-group sidebar-body">
-            <div class="card">
+    <div class="col-md-5 col-sm-6 col-xs-12 sidebar sidebar-left float-left" id="accordion-left">
+        <div class="sidebar-body">
+            <div class="sidebar-item-content card m-1" id="result-card">
                 <div class="card-header">
                     查询结果
                     <button class="close slide-submenu">
@@ -52,11 +51,16 @@
 
                 </div>
             </div>
+            <div class="sidebar-item-button m-1" style="display: flex; justify-content: flex-start;">
+                <button id="result-button" class="btn btn-default pull-right bg-light">
+                    <div class="fa fa-search"></div>
+                </button>
+            </div>
         </div>
     </div>
-    <div class="col-4 col-lg-3 sidebar sidebar-right float-right" id="accordion-right">
-        <div class="panel-group sidebar-body">
-            <div class="card">
+    <div class="col-md-5 col-sm-6 col-xs-12 sidebar sidebar-right float-right" id="accordion-right">
+        <div class="sidebar-body flex-column">
+            <div class="sidebar-item-content card m-1" id="xiaoqu-search-card">
                 <div class="card-header">
                     小区查询
                     <button type="button" class="close slide-submenu" aria-label="Close">
@@ -72,20 +76,50 @@
                             </button>
                         </div>
                     </form>
-
                 </div>
             </div>
+            <div class="sidebar-item-button m-1" style="display: flex; justify-content: flex-end;">
+                <button id="xiaoqu-search-button" class="btn btn-default pull-right bg-light">
+                    <div class="fa fa-search"></div>
+                </button>
+            </div>
 
+            <div class="sidebar-item-content card m-1" id="advanced-search-card">
+                <div class="card-header">
+                    高级查询
+                    <button type="button" class="close slide-submenu" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+            <div class="sidebar-item-button m-1" style="display: flex; justify-content: flex-end;">
+                <button id="advanced-search-button" class="btn btn-default pull-right bg-light">
+                    <div class="fa fa-check"></div>
+                </button>
+            </div>
         </div>
     </div>
 
     </div>
-    <div class="mini-submenu mini-submenu-left float-left">
-        <div class="fa fa-info"></div>
+
+    <div class="mini-submenus" style="display: none;">
+        <div class="mini-submenu-left-group d-flex flex-column">
+            <div class="mini-submenu-item mini-submenu-left result-list float-left m-1">
+                <div class="fa fa-list"></div>
+            </div>
+            <div class="mini-submenu-item mini-submenu-left result-info float-left m-1">
+                <div class="fa fa-info"></div>
+            </div>
+        </div>
+        <div class="mini-submenu-right-group d-flex flex-column">
+            <div class="mini-submenu-item mini-submenu-right search float-right m1">
+                <div class="fa fa-search"></div>
+            </div>
+        </div>
     </div>
-    <div class="mini-submenu mini-submenu-right search float-right">
-        <div class="fa fa-search"></div>
-    </div>
+
+
+
     </div>
     <script src="index.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.js"></script>
