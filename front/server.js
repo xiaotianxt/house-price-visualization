@@ -1,7 +1,7 @@
 /*
  * @Author: 小田
  * @Date: 2021-05-31 13:24:12
- * @LastEditTime: 2021-06-01 14:11:48
+ * @LastEditTime: 2021-06-01 15:44:24
  */
 
 // jQuery
@@ -13,7 +13,7 @@ window.$ = window.jQuery;
 // map.js
 import { changeCenter, addTag, showInfo } from "./map";
 
-export const url = "http://localhost:5000";
+export const url = "http://10.128.169.80:5000";
 export const searchPanel = $("#search-result-panel"); // 结果记录位置
 export var searchResults; // 小区搜索结果
 
@@ -68,4 +68,10 @@ export function xiaoquSearch(e) {
         searchPanel.append($elem);
       });
     });
+}
+
+export function polygonSearch(polygons) {
+  polygons.forEach((item) => {
+    console.log(item);
+  });
 }

@@ -1,12 +1,12 @@
 /*
  * @Author: 小田
  * @Date: 2021-05-31 01:00:05
- * @LastEditTime: 2021-05-31 21:07:20
+ * @LastEditTime: 2021-06-01 16:48:55
  */
 import "ol/ol.css";
-import * as ol from "ol";
 import { Map, View, Feature } from "ol";
 import TileLayer from "ol/layer/Tile";
+import { Polygon, MultiPolygon, Point } from "ol/geom";
 import { OSM, Vector as VectorSource } from "ol/source";
 import { Vector as VectorLayer } from "ol/layer";
 
@@ -14,10 +14,9 @@ const geom = require("ol/geom");
 const proj = require("ol/proj");
 const interaction = require("ol/interaction");
 const layer = require("ol/layer");
-const source = require("ol/source");
 const style = require("ol/style");
-import Draw from "ol/interaction/Draw";
-
+import { Draw, Modify, Select, Snap } from "ol/interaction";
+import { polygonSearch } from "./server";
 // jQuery
 const $ = require("jquery");
 
@@ -40,8 +39,14 @@ var web2gcj = function (item) {
 
 export var map = null;
 export var view = null;
-export var draw = null;
+
 export var isDrawing = false;
+export var polygonSource = null; // 多边形矢量
+export var polygonLayer = null; // 多边形矢量图层
+export var polygonDraw = null; // 绘制多边形
+export var polygonModify = null; // 编辑多边形
+export var polygonSelect = null; // 选择多边形
+export var polygonSnap = null;
 
 export function addTag(coordinates) {
   map.getLayers().forEach((item, index) => {
@@ -57,7 +62,7 @@ export function addTag(coordinates) {
     }),
   ];
   // create the source and layer for random features
-  const vectorSource = new source.Vector({
+  const vectorSource = new polygonSource.Vector({
     features,
   });
   const vectorLayer = new layer.Vector({
@@ -107,6 +112,31 @@ export function initMap() {
     view: view,
   });
 
+  initMapClick();
+}
+
+function initInteraction() {
+  polygonDraw = new Draw({
+    source: polygonSource,
+    type: "Polygon",
+  });
+  polygonModify = new Modify({
+    source: polygonSource,
+  });
+  polygonSelect = new Select({});
+  polygonSnap = new Snap({
+    source: polygonSource,
+  });
+}
+
+function removeInteraction() {
+  map.removeInteraction(polygonModify);
+  map.removeInteraction(polygonSelect);
+  map.removeInteraction(polygonSnap);
+  map.removeInteraction(polygonDraw);
+}
+
+function initMapClick() {
   map.on("singleclick", function (e) {
     console.log(
       proj.transform(
@@ -120,37 +150,68 @@ export function initMap() {
   });
 }
 
-function addInteraction() {
-  if (draw != null) {
-    map.removeInteraction(draw);
-  }
-  draw = new Draw({
-    source: source,
-    type: "Polygon",
-  });
-  map.addInteraction(draw);
-}
-
-export function initDraw() {
-  var source = new VectorSource({ wrapX: false });
-  var vector = new VectorLayer({
-    source: source,
+export function initPolygonEdit() {
+  polygonSource = new VectorSource({ wrapX: false });
+  polygonLayer = new VectorLayer({
+    source: polygonSource,
     usage: "polygon",
+    style: new style.Style({
+      fill: new style.Fill({
+        color: "rgba(255, 255, 255, 0.2)",
+      }),
+      stroke: new style.Stroke({
+        color: "#ffcc33",
+        width: 2,
+      }),
+    }),
   });
-  map.addLayer(vector);
-
-  draw = new Draw({
-    source: source,
-    type: "Polygon",
-  });
-
-  
-
-  addInteraction();
+  map.addLayer(polygonLayer);
+  initInteraction();
 }
+
+export function addPolygon(e) {
+  // 添加多边形
+  if (polygonLayer == null) {
+    initPolygonEdit();
+  }
+
+  map.addInteraction(polygonDraw);
+  map.addInteraction(polygonSnap);
+}
+
+export function editPolygon(e) {
+  if (polygonLayer == null) {
+    return; // 此时不需要考虑编辑多边形, 失效
+  }
+  removeInteraction();
+
+  map.addInteraction(polygonModify);
+  map.addInteraction(polygonSelect);
+  map.addInteraction(polygonSnap);
+}
+
+export function finishPolygon(e) {
+  removeInteraction();
+
+  var polygons = polygonSource.getFeatures().map((feature) => {
+    return feature.getGeometry();
+  });
+  var multipolygon = new MultiPolygon(polygons);
+}
+
+export function removePolygon(e) {
+  if (polygonLayer == null) {
+    // 此时不需要考虑删除多边形, 因为压根没有编辑多边形
+  }
+}
+
+export function removeAllPolygon(e) {}
 
 export function stopDraw() {
-  map.removeInteraction(draw);
+  removeInteraction();
+  map.addInteraction(polygonSelect);
+  map.addInteraction(polygonSnap);
+  polygonDraw = null;
 }
 
 export function showInfo(item) {
