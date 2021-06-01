@@ -1,7 +1,7 @@
 <!--
  * @Author: 小田
  * @Date: 2021-05-29 14:09:12
- * @LastEditTime: 2021-05-31 20:17:42
+ * @LastEditTime: 2021-05-31 20:55:33
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -69,7 +69,7 @@
                 </div>
                 <div id="xiaoqu-query" class="card-body bg-light pre-scrollable">
                     <form id="xiaoqu-locate" role="xiaoqu-locate">
-                        <div class="input-group col-xs-1">
+                        <div class="input-group ">
                             <input type="text" class="form-control" placeholder="小区">
                             <button type="submit" class="btn btn-secondary input-group-addon" role="button">
                                 搜索
@@ -90,6 +90,13 @@
                     <button type="button" class="close slide-submenu" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
+                </div>
+                <div class="card-body bg-light pre-scrollable">
+                    <form id="xiaoqu-advanced-locate">
+                        <div class="input-group ">
+                            <button class="btn btn-secondary" id="edit-polygon">编辑多边形</button>
+                        </div>
+                    </form>
                 </div>
             </div>
             <div class="sidebar-item-button m-1" style="display: flex; justify-content: flex-end;">

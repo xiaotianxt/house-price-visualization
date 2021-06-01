@@ -1,7 +1,7 @@
 /*
  * @Author: 小田
  * @Date: 2021-05-31 13:24:12
- * @LastEditTime: 2021-05-31 13:32:13
+ * @LastEditTime: 2021-06-01 14:11:48
  */
 
 // jQuery
@@ -38,9 +38,8 @@ export function xiaoquSearch(e) {
     .then((js) => {
       searchResults = js;
       searchPanel.children().remove();
-      var leftsub = $(".sidebar-left .slide-submenu-item").closest(".sidebar");
-      if (leftsub.css("display") == "none") {
-        $(".mini-submenu-left").trigger("click");
+      if ($("#result-card").css("display") == "none") {
+        $("#result-button").trigger("click");
       }
       js.forEach((element, index) => {
         console.log(element);

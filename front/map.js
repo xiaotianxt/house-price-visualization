@@ -1,19 +1,24 @@
 /*
  * @Author: 小田
  * @Date: 2021-05-31 01:00:05
- * @LastEditTime: 2021-05-31 19:08:57
+ * @LastEditTime: 2021-05-31 21:07:20
  */
 import "ol/ol.css";
 import * as ol from "ol";
 import { Map, View, Feature } from "ol";
 import TileLayer from "ol/layer/Tile";
-import OSM from "ol/source/OSM";
+import { OSM, Vector as VectorSource } from "ol/source";
+import { Vector as VectorLayer } from "ol/layer";
+
 const geom = require("ol/geom");
 const proj = require("ol/proj");
 const interaction = require("ol/interaction");
 const layer = require("ol/layer");
 const source = require("ol/source");
 const style = require("ol/style");
+import Draw from "ol/interaction/Draw";
+
+// jQuery
 const $ = require("jquery");
 
 // coordinates
@@ -33,8 +38,10 @@ var web2gcj = function (item) {
   return coordtransform.wgs84togcj02(item[0], item[1]);
 };
 
-var map = null;
-var view = null;
+export var map = null;
+export var view = null;
+export var draw = null;
+export var isDrawing = false;
 
 export function addTag(coordinates) {
   map.getLayers().forEach((item, index) => {
@@ -111,6 +118,39 @@ export function initMap() {
     console.log(`web: ${map.getEventCoordinate(e.originalEvent)}`);
     console.log(`wgs: ${web2gcj(map.getEventCoordinate(e.originalEvent))}`);
   });
+}
+
+function addInteraction() {
+  if (draw != null) {
+    map.removeInteraction(draw);
+  }
+  draw = new Draw({
+    source: source,
+    type: "Polygon",
+  });
+  map.addInteraction(draw);
+}
+
+export function initDraw() {
+  var source = new VectorSource({ wrapX: false });
+  var vector = new VectorLayer({
+    source: source,
+    usage: "polygon",
+  });
+  map.addLayer(vector);
+
+  draw = new Draw({
+    source: source,
+    type: "Polygon",
+  });
+
+  
+
+  addInteraction();
+}
+
+export function stopDraw() {
+  map.removeInteraction(draw);
 }
 
 export function showInfo(item) {
