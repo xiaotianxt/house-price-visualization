@@ -21,8 +21,7 @@ class RequestHandler():
     def __init__(self) -> None:
         self.db = db()
 
-    def query_within_polygon(self, request):
-        polygon = Polygon(request['polygon']['coordinates'][0])
+    def query_within_polygon(self, polygon):
         print(list(self.db.location_geo_within(polygon)))
         return json.dumps(list(self.db.location_geo_within(polygon)), cls=JSONEncoder)
 
@@ -31,3 +30,6 @@ class RequestHandler():
 
     def query_within_today_name(self, xiaoqu):
         return json.dumps(list(self.db.today_name(xiaoqu)), cls=JSONEncoder)
+
+    def query_within_today_advanced(self, coordinates, min_price, max_price):
+        return json.dumps(list(self.db.today_advanced(coordinates, min_price, max_price)), cls=JSONEncoder)

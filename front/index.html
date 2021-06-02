@@ -1,7 +1,7 @@
 <!--
  * @Author: 小田
  * @Date: 2021-05-29 14:09:12
- * @LastEditTime: 2021-06-01 15:55:52
+ * @LastEditTime: 2021-06-03 00:38:12
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -14,26 +14,32 @@
   maximum-scale=1.0, 
   user-scalable=no" />
     <title>房屋价格可视化系统</title>
+    <link rel="stylesheet" href="style.css">
     <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.css" rel="stylesheet">
     <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="loader.css">
 
 </head>
 
 <body>
+    <div class="loader-wrapper">
+        <span class="loader"><span class="loader-inner"></span></span>
+    </div>
     <nav class="navbar navbar-fixed-top navbar-light bg-light" role="navigation">
         <a class="navbar-brand" href="#">房屋价格可视化系统</a>
         <ul class="navbar-nav">
-            <li class="navbar-item"><a href="#" class="nav-link">登录</a></li>
+            <li class="navbar-item"><a href="#" class="nav-link">PRE</a></li>
         </ul>
     </nav>
-
     </nav>
     <div id="map">
     </div>
-    <div class="col-md-5 col-sm-6 col-xs-12 sidebar sidebar-left float-left" id="accordion-left">
-        <div class="sidebar-body">
+
+    <div class="col-md-5 col-sm-6 col-xs-12 sidebar sidebar-left float-sm-left float-md-left float-lg-left"
+        id="accordion-left">
+        <div class="sidebar-body flex-sm-column-reverse d-sm-flex d-md-flex d-lg-flex">
             <div class="sidebar-item-content card m-1" id="result-card" style="display:none">
                 <div class="card-header">
                     查询结果
@@ -52,10 +58,27 @@
                                 </ul>
                             </div>
                             <div class="carousel-item">
-                                <button class="btn btn-primary" id="search-result-info-back">返回</button>
+                                <div class="card bg-transparent border-light p-0">
+                                    <div class="card-header bg-transparent border-light p-0 ">
+                                        <button class="btn btn-light d-flex align-items-center"
+                                            id="search-result-info-back">
+                                            <div class="fa fa-arrow-left"></div>
+                                            <h5 for="search-result-info-back" id="search-result-info-title"
+                                                class="mb-0 ml-2">
+                                            </h5>
+                                        </button>
+
+
+                                    </div>
+                                    <div class="card-body p-0">
+                                        <canvas id="myChart"></canvas>
+                                    </div>
+                                </div>
+
+
                                 <div id="search-result-info">
                                     <div>
-                                        <canvas id="myChart"></canvas>
+
                                     </div>
                                 </div>
                             </div>
@@ -67,15 +90,16 @@
                     </a>
                 </div>
             </div>
-            <div class="sidebar-item-button m-1" style="display: flex; justify-content: flex-start;">
-                <button id="result-button" class="btn btn-default pull-right bg-light">
+            <div class="sidebar-item-button ">
+                <button id="result-button" class="btn btn-default bg-light m-1">
                     <div class="fa fa-list"></div>
                 </button>
             </div>
         </div>
     </div>
-    <div class="col-md-4 col-sm-6 col-xs-12 sidebar sidebar-right float-right" id="accordion-right">
-        <div class="sidebar-body flex-column">
+    <div class="col-md-4 col-sm-6 col-xs-12 sidebar sidebar-right float-sm-left float-md-right float-lg-right"
+        id="accordion-right">
+        <div class="sidebar-body flex-sm-column-reverse d-sm-flex d-md-flex d-lg-flex">
             <div class="sidebar-item-content card m-1" id="xiaoqu-search-card" style="display:none">
                 <div class="card-header">
                     小区查询
@@ -94,8 +118,8 @@
                     </form>
                 </div>
             </div>
-            <div class="sidebar-item-button m-1" style="display: flex; justify-content: flex-end;">
-                <button id="xiaoqu-search-button" class="btn btn-default pull-right bg-light">
+            <div class="sidebar-item-button m-1 float-sm-right float-md-right float-lg-right">
+                <button id="xiaoqu-search-button" class="btn btn-default pull-right bg-light m-1">
                     <div class="fa fa-search"></div>
                 </button>
             </div>
@@ -166,7 +190,7 @@
                                     </div>
                                     <div class="form-text text-muted">
                                         <small class="form-text text-muted">
-                                            查询结果包含了价格缺失的部分
+                                            查询结果不包含无价格小区
                                         </small>
                                     </div>
 
@@ -178,44 +202,20 @@
 
                         </div>
 
-                        <div class="form-group">
-                            <label for="submit-button"></label>
-                            <button class="btn btn-primary" id="advanced-search-button">提交</button>
+                        <div class="form-group d-flex justify-content-center">
+                            <button class="btn btn-secondary col-12" id="advanced-search-button">提交</button>
                         </div>
 
                     </form>
                 </div>
             </div>
-            <div class="sidebar-item-button m-1" style="display: flex; justify-content: flex-end;">
-                <button id="advanced-search-button" class="btn btn-default pull-right bg-light">
+            <div class="sidebar-item-button m-1 float-sm-right float-md-right float-lg-right">
+                <button id="advanced-search-button" class="btn btn-default pull-right bg-light m-1">
                     <div class="fa fa-check"></div>
                 </button>
             </div>
         </div>
     </div>
-
-    </div>
-
-    <div class="mini-submenus" style="display: none;">
-        <div class="mini-submenu-left-group d-flex flex-column">
-            <div class="mini-submenu-item mini-submenu-left result-list float-left m-1">
-                <div class="fa fa-list"></div>
-            </div>
-            <div class="mini-submenu-item mini-submenu-left result-info float-left m-1">
-                <div class="fa fa-info"></div>
-            </div>
-        </div>
-        <div class="mini-submenu-right-group d-flex flex-column">
-            <div class="mini-submenu-item mini-submenu-right search float-right m1">
-                <div class="fa fa-search"></div>
-            </div>
-        </div>
-    </div>
-
-
-
-    </div>
-    <script src="https://cdn.bootcdn.net/ajax/libs/Chart.js/3.3.0/chart.js"></script>
     <script src="index.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.js"></script>
 </body>

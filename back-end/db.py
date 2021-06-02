@@ -21,17 +21,18 @@ class db():
     def location_filter(self, query):
         return self.location.find(query)
 
-    def location_geo_within(self, polygon):
-        return self.location_filter({
+    def location_geo_within(self, coordinates):
+        query = {
             'geometry': {
                 '$geoWithin': {
                     '$geometry': {
-                        'type': 'Polygon',
-                        'coordinates': [polygon.coordinates]
+                        'type': 'Multipolygon',
+                        'coordinates': [coordinates]
                     }
                 }
             }
-        })
+        }
+        return self.location_filter(query)
 
     def location_geo_near(self, point, min_dis=0, max_dis=10):
         return self.location_filter({
@@ -66,10 +67,51 @@ class db():
     # db.location.find({'properties.xiaoqu': /(\s\S)*华清嘉园(\s\S)*/})
 
     def xiaoqu_name(self, xiaoqu):
-        return self.location.find({"properties.xiaoqu": {"$regex": f".*{xiaoqu}.*"}})
+        return (self.xiaoqu.aggregate([
+            {
+                "$match": {
+                    "xiaoqu": f"{xiaoqu}"
+                }
+            },
+            {"$group": {
+                "_id": {
+                    'price': "$price",
+                    'date': "$date"
+                }
+            }}
+        ]))
 
     def today_name(self, xiaoqu):
         return self.today.find({"properties.xiaoqu": {"$regex": f".*{xiaoqu}.*"}})
+
+    def today_filter(self, query):
+        print("QUERY: ", query)
+        return self.today.find(query)
+
+    def today_advanced(self, coordinates, min_price, max_price):
+        if coordinates is None:
+            query = {
+                "$and": [
+                    {"properties.price": {"$gt": min_price}},
+                    {"properties.price": {"$lt": max_price}}
+                ]
+            }
+        else:
+            query = {
+                'geometry': {
+                    '$geoWithin': {
+                        '$geometry': {
+                            'type': 'MultiPolygon',
+                            'coordinates': coordinates
+                        }
+                    }
+                },
+                "$and": [
+                    {"properties.price": {"$gt": min_price}},
+                    {"properties.price": {"$lt": max_price}}
+                ]
+            }
+        return self.today_filter(query)
 
 
 if __name__ == '__main__':

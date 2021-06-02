@@ -14,8 +14,64 @@ body {
   right: 0px;
 }
 
-#map .ol-zoom {
-  font-size: 1.2em;
+#map .ol-zoom-in {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  font: inherit;
+  list-style: none;
+  margin: 0;
+  outline: 0;
+  overflow: visible;
+  padding: 0;
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 8px;
+  display: block;
+  height: 29px;
+  left: 0px;
+  overflow: hidden;
+  position: absolute;
+  cursor: pointer;
+  width: 29px;
+  z-index: 2;
+  box-sizing: border-box;
+  transition: background-color 0.16s ease-out;
+  bottom: 0px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+#map .ol-zoom-out {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  font: inherit;
+  list-style: none;
+  margin: 0;
+  outline: 0;
+  overflow: visible;
+  padding: 0;
+  color: inherit;
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 8px;
+  display: block;
+  height: 29px;
+  left: 0px;
+  overflow: hidden;
+  position: absolute;
+  cursor: pointer;
+  width: 29px;
+  z-index: 2;
+  box-sizing: border-box;
+  transition: background-color 0.16s ease-out;
+  top: 0px;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+}
+
+#map .ol-rotate,
+#map .ol-attribution {
+  display: none;
 }
 
 #map .ol-zoom-in > span,
@@ -25,9 +81,14 @@ body {
 
 #map .ol-zoom {
   position: fixed;
-  bottom: 2em;
-  left: 2em;
+  bottom: 5em;
+  right: 3em;
   top: auto;
+}
+
+#map .ol-zoom button:hover {
+  font: bolder;
+  background-color: rgba(255, 255, 255, 0.4);
 }
 
 .zoom-top-opened-sidebar {

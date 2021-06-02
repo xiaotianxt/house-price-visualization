@@ -24,6 +24,7 @@ def main():
 def search():
     data = request.get_json()
     rq_type = data['type']
+    print("DATA: ", data)
 
     if rq_type == "xiaoqu":
         xiaoqu = data['xiaoqu']
@@ -32,5 +33,10 @@ def search():
 
     elif rq_type == "advanced":
         polygon = data['polygon']
-        print(polygon)
-        return json.dumps({"hello": "hello"}), 200, {'content-type': 'application/json'}
+        min_price = data['price']['min']
+        max_price = data['price']['max']
+
+        return handler.query_within_today_advanced(polygon, min_price, max_price), 200, {'content-type': 'application/json'}
+    elif rq_type == "prices":
+        xiaoqu = data['item']['xiaoqu']
+        return handler.query_within_xiaoqu_name(xiaoqu), 200, {'content-type': "application/json"}

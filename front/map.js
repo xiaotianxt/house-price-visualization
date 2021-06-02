@@ -1,29 +1,21 @@
 /*
  * @Author: 小田
  * @Date: 2021-05-31 01:00:05
- * @LastEditTime: 2021-06-01 16:48:55
+ * @LastEditTime: 2021-06-03 00:02:32
  */
-import "ol/ol.css";
+
 import { Map, View, Feature } from "ol";
-import TileLayer from "ol/layer/Tile";
-import { Polygon, MultiPolygon, Point } from "ol/geom";
 import { OSM, Vector as VectorSource } from "ol/source";
-import { Vector as VectorLayer } from "ol/layer";
-
-const geom = require("ol/geom");
-const proj = require("ol/proj");
-const interaction = require("ol/interaction");
-const layer = require("ol/layer");
-const style = require("ol/style");
-const format = require("ol/format");
+import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer";
+import { Point } from "ol/geom";
+import { transform } from "ol/proj";
+import { Style, Circle, Stroke, Fill } from "ol/style";
 import { Draw, Modify, Select, Snap } from "ol/interaction";
-import { polygonSearch } from "./server";
 
-import olpjch from "ol-proj-ch";
+import { GCJ02 } from "ol-proj-ch";
 /* GCJ02 */
-const GCJ02 = olpjch.GCJ02;
 const code = GCJ02.CODE;
-console.log(code);
+
 // jQuery
 const $ = require("jquery");
 
@@ -48,23 +40,23 @@ export function addTag(coordinates) {
   });
   const features = [
     new Feature({
-      geometry: new geom.Point(coordinates),
+      geometry: new Point(coordinates),
     }),
   ];
   // create the source and layer for random features
   const vectorSource = new VectorSource({
     features,
   });
-  const vectorLayer = new layer.Vector({
+  const vectorLayer = new VectorLayer({
     source: vectorSource,
-    style: new style.Style({
-      image: new style.Circle({
+    style: new Style({
+      image: new Circle({
         radius: 8,
-        stroke: new style.Stroke({
+        stroke: new Stroke({
           color: "#0D7FFB",
           width: 3,
         }),
-        fill: new style.Fill({
+        fill: new Fill({
           color: "#3395FF",
         }),
       }),
@@ -84,7 +76,7 @@ export function changeCenter(coordinates) {
 
 export function initMap() {
   view = new View({
-    center: proj.transform(
+    center: transform(
       [116.39091924126066, 39.90675052053757],
       "EPSG:4326",
       "EPSG:3857"
@@ -131,7 +123,7 @@ function removeInteraction() {
 function initMapClick() {
   map.on("singleclick", function (e) {
     console.log(
-      proj.transform(
+      transform(
         map.getEventCoordinate(e.originalEvent),
         "EPSG:3857",
         "EPSG:4326"
@@ -146,11 +138,11 @@ export function initPolygonEdit() {
   polygonLayer = new VectorLayer({
     source: polygonSource,
     usage: "polygon",
-    style: new style.Style({
-      fill: new style.Fill({
-        color: "rgba(255, 255, 255, 0.8)",
+    style: new Style({
+      fill: new Fill({
+        color: "rgba(255, 255, 255, 0.5)",
       }),
-      stroke: new style.Stroke({
+      stroke: new Stroke({
         color: "#ffcc33",
         width: 2,
       }),
@@ -196,14 +188,20 @@ export function getMultiPolygon() {
   if (!$("#polygon-checkbox").is(":checked")) {
     return null;
   }
-  var polygons = polygonSource.getFeatures().map((feature) => {
-    return feature.getGeometry();
-  });
+  var polygons = polygonSource
+    .getFeatures()
+    .map((feature) => {
+      return feature.getGeometry();
+    })
+    .map((polygon) => {
+      var coord = polygon.getCoordinates()[0];
+      console.log(coord);
+      return [coord.map((coord) => transform(coord, "EPSG:3857", code))];
+    });
 
-  var multipolygon = new MultiPolygon(polygons).applyTransform;
   // 需要将所有坐标转化成其他的
-
-  return multipolygon;
+  console.log(polygons);
+  return polygons;
 }
 
 export function removePolygon(e) {
@@ -234,10 +232,4 @@ export function stopDraw() {
   map.addInteraction(polygonSelect);
   map.addInteraction(polygonSnap);
   polygonDraw = null;
-}
-
-export function showInfo(item) {
-  console.log(item);
-  $("#info-next").trigger("click"); // 进入细节界面
-  var info = $("#search-result-info");
 }
