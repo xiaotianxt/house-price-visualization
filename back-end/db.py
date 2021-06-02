@@ -12,7 +12,7 @@ class db():
     def __init__(self) -> None:
         DB = CONFIG.DB
         self.client = MongoClient(
-            f"mongodb://{DB['host']}:{DB['port']}/{DB['database']}", username="lianjia", password="lianjia")
+            f"mongodb://{DB['host']}:{DB['port']}/{DB['database']}", username="lianjia", password="lianjia", connect=False)
         self._db = self.client['lianjia']
         self.xiaoqu = self._db['xiaoqu']
         self.location = self._db['location']
