@@ -58,7 +58,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-5 col-sm-6 col-xs-12 sidebar sidebar-right float-right" id="accordion-right">
+    <div class="col-md-4 col-sm-6 col-xs-12 sidebar sidebar-right float-right" id="accordion-right">
         <div class="sidebar-body flex-column">
             <div class="sidebar-item-content card m-1" id="xiaoqu-search-card">
                 <div class="card-header">
@@ -92,14 +92,54 @@
                     </button>
                 </div>
                 <div class="card-body bg-light pre-scrollable">
-                    <form id="xiaoqu-advanced-locate">
-                        <div class="input-group d-flex">
-                            <button class="btn btn-secondary" id="add-polygon">添加多边形</button>
-                            <button class="btn btn-secondary" id="edit-polygon">编辑多边形</button>
-                            <button class="btn btn-secondary" id="finish-polygon">完成多边形</button>
-                            <button class="btn btn-secondary" id="remove-polygon">删除多边形</button>
-                            <button class="btn btn-secondary" id="remove-all-polygon">清空</button>
+                    <form class="" id="xiaoqu-advanced-locate">
+                        <div class="form-group">
+                            <label for="polygon">多边形编辑</label>
+                            <div class="btn-group mx-auto text-center d-flex" role="group" aria-label="Basic example">
+                                <button class="btn btn-light" id="add-polygon">
+                                    <div class="fa fa-plus"></div>
+                                </button>
+                                <button class="btn btn-light" id="remove-polygon">
+                                    <div class="fa fa-minus"></div>
+                                </button>
+                                <button class="btn btn-light" id="edit-polygon">
+                                    <div class="fa fa-edit"></div>
+                                </button>
+                                <button class="btn btn-light" id="remove-all-polygon">
+                                    <div class="fa fa-trash"></div>
+                                </button>
+                                <button class="btn btn-light" id="finish-polygon">
+                                    <div class="fa fa-check"></div>
+                                </button>
+                            </div>
+                            <small class="form-text text-muted">按照多边形内范围进行查询</small>
                         </div>
+
+                        <div class="form-group">
+                            <label for="price">价格范围</label>
+                            <label for="price-range-a"></label>
+                            <input class="d-flex text-center mx-auto price-slider" type="text" name="price-range-a"
+                                id="price-range-a" min="0" max="100" data-index="0" value="40" data-popup-enabled="true"
+                                data-show-value="true">
+                            <label for="price-range-b"></label>
+                            <input class="d-flex text-center mx-auto price-slider" type="text" name="price-range-b"
+                                id="price-range-b" min="0" max="100" data-index="1" value="40" data-popup-enabled="true"
+                                data-show-value="true">
+                            <div id="slider">
+
+                            </div>
+                            <script>
+
+                            </script>
+                            <small class="form-text text-muted">
+                                查询结果包含了价格缺失的部分
+                            </small>
+                        </div>
+
+                        <div class="form-group">
+
+                        </div>
+
                     </form>
                 </div>
             </div>

@@ -134,6 +134,8 @@ function removeInteraction() {
   map.removeInteraction(polygonSelect);
   map.removeInteraction(polygonSnap);
   map.removeInteraction(polygonDraw);
+
+  polygonSelect = new Select();
 }
 
 function initMapClick() {
@@ -157,7 +159,7 @@ export function initPolygonEdit() {
     usage: "polygon",
     style: new style.Style({
       fill: new style.Fill({
-        color: "rgba(255, 255, 255, 0.2)",
+        color: "rgba(255, 255, 255, 0.8)",
       }),
       stroke: new style.Stroke({
         color: "#ffcc33",
@@ -170,6 +172,8 @@ export function initPolygonEdit() {
 }
 
 export function addPolygon(e) {
+  e.preventDefault();
+  removeInteraction();
   // 添加多边形
   if (polygonLayer == null) {
     initPolygonEdit();
@@ -180,6 +184,7 @@ export function addPolygon(e) {
 }
 
 export function editPolygon(e) {
+  e.preventDefault();
   if (polygonLayer == null) {
     return; // 此时不需要考虑编辑多边形, 失效
   }
@@ -191,21 +196,38 @@ export function editPolygon(e) {
 }
 
 export function finishPolygon(e) {
+  e.preventDefault();
   removeInteraction();
 
   var polygons = polygonSource.getFeatures().map((feature) => {
     return feature.getGeometry();
   });
   var multipolygon = new MultiPolygon(polygons);
+  console.log(multipolygon);
 }
 
 export function removePolygon(e) {
+  e.preventDefault();
+  removeInteraction();
+
+  map.addInteraction(polygonSelect);
+
   if (polygonLayer == null) {
     // 此时不需要考虑删除多边形, 因为压根没有编辑多边形
   }
+  polygonSelect.on("select", function (e) {
+    e.preventDefault();
+    e.selected.forEach((item) => {
+      polygonSource.removeFeature(item);
+    });
+  });
 }
 
-export function removeAllPolygon(e) {}
+export function removeAllPolygon(e) {
+  e.preventDefault();
+  removeInteraction();
+  polygonSource.clear();
+}
 
 export function stopDraw() {
   removeInteraction();

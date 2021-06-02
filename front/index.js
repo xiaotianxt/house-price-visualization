@@ -18,17 +18,25 @@ const source = require("ol/source");
 const style = require("ol/style");
 
 // jQuery
-const $ = require("jquery");
+import $ from "jquery";
 window.jQuery = $;
 jQuery = $;
 window.$ = window.jQuery;
+global.$ = $;
 
 // 小工具
 
 var pointLayer = null; // 用于标记点图层
 var pointSource = null; // 用于标记点图层的数据
 
-import { initMap, editPolygon, addPolygon, finishPolygon } from "./map";
+import {
+  initMap,
+  editPolygon,
+  addPolygon,
+  finishPolygon,
+  removePolygon,
+  removeAllPolygon,
+} from "./map";
 import { init } from "./ui";
 import { xiaoquSearch } from "./server";
 
@@ -44,6 +52,25 @@ $(function () {
   $("#add-polygon").on("click", addPolygon);
   $("#edit-polygon").on("click", editPolygon);
   $("#finish-polygon").on("click", finishPolygon);
+  $("#remove-polygon").on("click", removePolygon);
+  $("#remove-all-polygon").on("click", removeAllPolygon);
+
+  $("#slider").slider({
+    min: 0,
+    max: 100,
+    step: 1,
+    values: [10, 90],
+    slide: function (event, ui) {
+      for (var i = 0; i < ui.values.length; ++i) {
+        $("input.price-slider[data-index=" + i + "]").val(ui.values[i]);
+      }
+    },
+  });
+
+  $("input.price-slider").on("change", function (e) {
+    var $this = $(this);
+    $("slider").slider("values", $this.data("index"), $this.val());
+  });
 });
 
 exports.map = map;
