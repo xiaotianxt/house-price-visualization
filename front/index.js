@@ -24,6 +24,9 @@ jQuery = $;
 window.$ = window.jQuery;
 global.$ = $;
 
+require("jquery-range/jquery.range.css");
+require("jquery-range/jquery.range");
+
 // 小工具
 
 var pointLayer = null; // 用于标记点图层
@@ -38,7 +41,7 @@ import {
   removeAllPolygon,
 } from "./map";
 import { init } from "./ui";
-import { xiaoquSearch } from "./server";
+import { xiaoquSearch, advancedSearch } from "./server";
 
 $(function () {
   initMap();
@@ -47,30 +50,18 @@ $(function () {
 
   // 小区搜索函数
   $("#xiaoqu-locate").on("submit", xiaoquSearch);
+  $("#advanced-search-button").on("click", advancedSearch);
 
   // 多边形的编辑工具
+  $(".polygon-control-btns button").on("click", function () {
+    $("#polygon-checkbox").prop("checked", true);
+  });
+
   $("#add-polygon").on("click", addPolygon);
   $("#edit-polygon").on("click", editPolygon);
   $("#finish-polygon").on("click", finishPolygon);
   $("#remove-polygon").on("click", removePolygon);
   $("#remove-all-polygon").on("click", removeAllPolygon);
-
-  $("#slider").slider({
-    min: 0,
-    max: 100,
-    step: 1,
-    values: [10, 90],
-    slide: function (event, ui) {
-      for (var i = 0; i < ui.values.length; ++i) {
-        $("input.price-slider[data-index=" + i + "]").val(ui.values[i]);
-      }
-    },
-  });
-
-  $("input.price-slider").on("change", function (e) {
-    var $this = $(this);
-    $("slider").slider("values", $this.data("index"), $this.val());
-  });
 });
 
 exports.map = map;

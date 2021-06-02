@@ -22,8 +22,15 @@ def main():
 @app.route("/search", methods=["GET", "POST"])
 @cross_origin()
 def search():
-    rq_type = request.args.get("type")
+    data = request.get_json()
+    rq_type = data['type']
+
     if rq_type == "xiaoqu":
-        xiaoqu = request.args.get("xiaoqu")
+        xiaoqu = data['xiaoqu']
         logging.info("查询小区: " + xiaoqu)
         return handler.query_within_today_name(xiaoqu), 200, {'content-type': 'application/json'}
+
+    elif rq_type == "advanced":
+        polygon = data['polygon']
+        print(polygon)
+        return json.dumps({"hello": "hello"}), 200, {'content-type': 'application/json'}

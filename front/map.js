@@ -15,27 +15,17 @@ const proj = require("ol/proj");
 const interaction = require("ol/interaction");
 const layer = require("ol/layer");
 const style = require("ol/style");
+const format = require("ol/format");
 import { Draw, Modify, Select, Snap } from "ol/interaction";
 import { polygonSearch } from "./server";
+
+import olpjch from "ol-proj-ch";
+/* GCJ02 */
+const GCJ02 = olpjch.GCJ02;
+const code = GCJ02.CODE;
+console.log(code);
 // jQuery
 const $ = require("jquery");
-
-// coordinates
-const coordtransform = require("coordtransform");
-var gcj2wgs = coordtransform.gcj02towgs84;
-var gcj2web = function (item) {
-  return proj.transform(gcj2wgs(item[0], item[1]), "EPSG:4326", "EPSG:3857");
-};
-var wgs2web = function (item) {
-  return proj.transform(item, "EPSG:4326", "EPSG:3857");
-};
-var web2wgs = function (item) {
-  return proj.transform(item, "EPSG:3857", "EPSG:4326");
-};
-var web2gcj = function (item) {
-  item = web2wgs(item);
-  return coordtransform.wgs84togcj02(item[0], item[1]);
-};
 
 export var map = null;
 export var view = null;
@@ -58,11 +48,11 @@ export function addTag(coordinates) {
   });
   const features = [
     new Feature({
-      geometry: new geom.Point(gcj2web(coordinates)),
+      geometry: new geom.Point(coordinates),
     }),
   ];
   // create the source and layer for random features
-  const vectorSource = new polygonSource.Vector({
+  const vectorSource = new VectorSource({
     features,
   });
   const vectorLayer = new layer.Vector({
@@ -86,7 +76,7 @@ export function addTag(coordinates) {
 
 export function changeCenter(coordinates) {
   view.animate({
-    center: gcj2web(coordinates),
+    center: coordinates,
     zoom: 17,
     duration: 1000,
   });
@@ -148,7 +138,6 @@ function initMapClick() {
       )
     );
     console.log(`web: ${map.getEventCoordinate(e.originalEvent)}`);
-    console.log(`wgs: ${web2gcj(map.getEventCoordinate(e.originalEvent))}`);
   });
 }
 
@@ -198,12 +187,23 @@ export function editPolygon(e) {
 export function finishPolygon(e) {
   e.preventDefault();
   removeInteraction();
+}
 
+export function getMultiPolygon() {
+  if (polygonSource == null) {
+    return null;
+  }
+  if (!$("#polygon-checkbox").is(":checked")) {
+    return null;
+  }
   var polygons = polygonSource.getFeatures().map((feature) => {
     return feature.getGeometry();
   });
-  var multipolygon = new MultiPolygon(polygons);
-  console.log(multipolygon);
+
+  var multipolygon = new MultiPolygon(polygons).applyTransform;
+  // 需要将所有坐标转化成其他的
+
+  return multipolygon;
 }
 
 export function removePolygon(e) {
@@ -238,4 +238,6 @@ export function stopDraw() {
 
 export function showInfo(item) {
   console.log(item);
+  $("#info-next").trigger("click"); // 进入细节界面
+  var info = $("#search-result-info");
 }

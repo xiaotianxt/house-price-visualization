@@ -34,7 +34,7 @@
     </div>
     <div class="col-md-5 col-sm-6 col-xs-12 sidebar sidebar-left float-left" id="accordion-left">
         <div class="sidebar-body">
-            <div class="sidebar-item-content card m-1" id="result-card">
+            <div class="sidebar-item-content card m-1" id="result-card" style="display:none">
                 <div class="card-header">
                     查询结果
                     <button class="close slide-submenu">
@@ -44,23 +44,39 @@
                     </button>
                 </div>
                 <div class="card-body bg-light pre-scrollable">
+                    <div id="info-carousel" class="carousel slide" data-interval="false">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <ul class="list-group" id="search-result-panel">
 
-                    <ul class="list-group" id="search-result-panel">
-
-                    </ul>
-
+                                </ul>
+                            </div>
+                            <div class="carousel-item">
+                                <button class="btn btn-primary" id="search-result-info-back">返回</button>
+                                <div id="search-result-info">
+                                    <div>
+                                        <canvas id="myChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a class="carousel-control left d-none" id="info-prev" href="#info-carousel" data-slide="prev"> 上一个
+                    </a>
+                    <a class="carousel-control right d-none" id="info-next" href="#info-carousel" data-slide="next"> 上一个
+                    </a>
                 </div>
             </div>
             <div class="sidebar-item-button m-1" style="display: flex; justify-content: flex-start;">
                 <button id="result-button" class="btn btn-default pull-right bg-light">
-                    <div class="fa fa-search"></div>
+                    <div class="fa fa-list"></div>
                 </button>
             </div>
         </div>
     </div>
     <div class="col-md-4 col-sm-6 col-xs-12 sidebar sidebar-right float-right" id="accordion-right">
         <div class="sidebar-body flex-column">
-            <div class="sidebar-item-content card m-1" id="xiaoqu-search-card">
+            <div class="sidebar-item-content card m-1" id="xiaoqu-search-card" style="display:none">
                 <div class="card-header">
                     小区查询
                     <button type="button" class="close slide-submenu" aria-label="Close">
@@ -84,7 +100,7 @@
                 </button>
             </div>
 
-            <div class="sidebar-item-content card m-1" id="advanced-search-card">
+            <div class="sidebar-item-content card m-1" id="advanced-search-card" style="display:none">
                 <div class="card-header">
                     高级查询
                     <button type="button" class="close slide-submenu" aria-label="Close">
@@ -94,50 +110,77 @@
                 <div class="card-body bg-light pre-scrollable">
                     <form class="" id="xiaoqu-advanced-locate">
                         <div class="form-group">
-                            <label for="polygon">多边形编辑</label>
-                            <div class="btn-group mx-auto text-center d-flex" role="group" aria-label="Basic example">
-                                <button class="btn btn-light" id="add-polygon">
-                                    <div class="fa fa-plus"></div>
-                                </button>
-                                <button class="btn btn-light" id="remove-polygon">
-                                    <div class="fa fa-minus"></div>
-                                </button>
-                                <button class="btn btn-light" id="edit-polygon">
-                                    <div class="fa fa-edit"></div>
-                                </button>
-                                <button class="btn btn-light" id="remove-all-polygon">
-                                    <div class="fa fa-trash"></div>
-                                </button>
-                                <button class="btn btn-light" id="finish-polygon">
-                                    <div class="fa fa-check"></div>
-                                </button>
+                            <div class="custom-control custom-checkbox" data-toggle="collapse"
+                                data-target="#polygon-edit-tools">
+                                <input type="checkbox" name="polygon-checkbox" id="polygon-checkbox"
+                                    class="custom-control-input">
+                                <label for="polygon-checkbox" class="custom-control-label">多边形编辑</label>
                             </div>
-                            <small class="form-text text-muted">按照多边形内范围进行查询</small>
+                            <div class="collapse" id="polygon-edit-tools">
+                                <div class="card-body bg-transparent p-1">
+
+                                    <div class="btn-group mx-auto text-center d-flex polygon-control-btns" role="group"
+                                        aria-label="polygon-edit-tools">
+                                        <button class="btn btn-light" id="add-polygon">
+                                            <div class="fa fa-plus"></div>
+                                        </button>
+                                        <button class="btn btn-light" id="remove-polygon">
+                                            <div class="fa fa-minus"></div>
+                                        </button>
+                                        <button class="btn btn-light" id="edit-polygon">
+                                            <div class="fa fa-edit"></div>
+                                        </button>
+                                        <button class="btn btn-light" id="remove-all-polygon">
+                                            <div class="fa fa-trash"></div>
+                                        </button>
+                                        <button class="btn btn-light" id="finish-polygon">
+                                            <div class="fa fa-check"></div>
+                                        </button>
+                                    </div>
+                                    <small class="form-text text-muted">按照多边形内范围进行查询</small>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="price">价格范围</label>
-                            <label for="price-range-a"></label>
-                            <input class="d-flex text-center mx-auto price-slider" type="text" name="price-range-a"
-                                id="price-range-a" min="0" max="100" data-index="0" value="40" data-popup-enabled="true"
-                                data-show-value="true">
-                            <label for="price-range-b"></label>
-                            <input class="d-flex text-center mx-auto price-slider" type="text" name="price-range-b"
-                                id="price-range-b" min="0" max="100" data-index="1" value="40" data-popup-enabled="true"
-                                data-show-value="true">
-                            <div id="slider">
+                            <div class="custom-control custom-checkbox" data-toggle="collapse"
+                                data-target="#price-range">
+                                <input type="checkbox" name="price-checkbox" id="price-checkbox"
+                                    class="custom-control-input">
+                                <label for="price-checkbox" class="custom-control-label">价格范围</label>
+                            </div>
+
+                            <div class="collapse" id="price-range">
+                                <div class="card-body bg-transparent p-1">
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control" aria-label="最低价格"
+                                            aria-describedby="basic-addon2">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" id="basic-addon2"> - </span>
+                                        </div>
+                                        <input type="text" class="form-control" aria-label="最高价格"
+                                            aria-describedby="basic-addon3">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" id="basic-addon3">元/平米</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-text text-muted">
+                                        <small class="form-text text-muted">
+                                            查询结果包含了价格缺失的部分
+                                        </small>
+                                    </div>
+
+                                </div>
 
                             </div>
-                            <script>
 
-                            </script>
-                            <small class="form-text text-muted">
-                                查询结果包含了价格缺失的部分
-                            </small>
+
+
                         </div>
 
                         <div class="form-group">
-
+                            <label for="submit-button"></label>
+                            <button class="btn btn-primary" id="advanced-search-button">提交</button>
                         </div>
 
                     </form>
@@ -172,9 +215,9 @@
 
 
     </div>
+    <script src="https://cdn.bootcdn.net/ajax/libs/Chart.js/3.3.0/chart.js"></script>
     <script src="index.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.js"></script>
-
 </body>
 
 </html>

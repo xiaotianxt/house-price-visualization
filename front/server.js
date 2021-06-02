@@ -11,11 +11,19 @@ jQuery = $;
 window.$ = window.jQuery;
 
 // map.js
-import { changeCenter, addTag, showInfo } from "./map";
+import { changeCenter, addTag, showInfo, getMultiPolygon } from "./map";
+import { getPriceRange } from "./ui";
+import { transform } from "ol/proj";
 
-export const url = "http://10.128.169.80:5000";
+const url = "http://10.128.169.80:5000";
+const search_url = url + "/search";
 export const searchPanel = $("#search-result-panel"); // 结果记录位置
 export var searchResults; // 小区搜索结果
+
+import olpjch from "ol-proj-ch";
+/* GCJ02 */
+const GCJ02 = olpjch.GCJ02;
+const code = GCJ02.CODE;
 
 export const priceFormatter = function (price) {
   if (price >= 1000) {
@@ -28,9 +36,16 @@ export const priceFormatter = function (price) {
 export function xiaoquSearch(e) {
   e.preventDefault();
   var xiaoqu = $("#xiaoqu-locate input").val();
-  fetch(url + "/search?" + "xiaoqu=" + xiaoqu + "&type=xiaoqu", {
+  fetch(search_url, {
     mode: "cors",
-    method: "get",
+    method: "post",
+    body: JSON.stringify({
+      xiaoqu: xiaoqu,
+      type: "xiaoqu",
+    }),
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
   })
     .then((res) => {
       return res.json();
@@ -61,8 +76,13 @@ export function xiaoquSearch(e) {
         $elem.on("click", function (elem) {
           var item_index = $(this).attr("_id");
           var item = searchResults[item_index];
-          changeCenter(item.geometry.coordinates);
-          addTag(item.geometry.coordinates);
+          var coordinates = transform(
+            item.geometry.coordinates,
+            code,
+            "epsg:3857"
+          );
+          changeCenter(coordinates);
+          addTag(coordinates);
           showInfo(item);
         });
         searchPanel.append($elem);
@@ -70,6 +90,26 @@ export function xiaoquSearch(e) {
     });
 }
 
+export function advancedSearch(e) {
+  e.preventDefault();
+  var multipolygon = getMultiPolygon();
+  var price = getPriceRange();
+
+  var data = { polygon: multipolygon, price: price, type: "advanced" };
+  console.log(data);
+  fetch(search_url, {
+    mode: "cors",
+    method: "post",
+    body: JSON.stringify(data),
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
+  })
+    .then((response) => response.json())
+    .then((js) => {
+      console.log(js);
+    });
+}
 export function polygonSearch(polygons) {
   polygons.forEach((item) => {
     console.log(item);
