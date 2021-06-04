@@ -1,7 +1,7 @@
 /*
  * @Author: 小田
  * @Date: 2021-05-31 13:24:12
- * @LastEditTime: 2021-06-04 23:28:34
+ * @LastEditTime: 2021-06-05 00:13:08
  */
 
 // jQuery
@@ -11,7 +11,7 @@ jQuery = $;
 window.$ = window.jQuery;
 
 // map.js
-import { changeCenter, addTag, getMultiPolygon } from "./map";
+import { changeCenter, addTag, getMultiPolygon, addSelect } from "./map";
 import { getPriceRange, showInfo, updateChart } from "./ui";
 import { transform } from "ol/proj";
 
@@ -35,6 +35,7 @@ export const priceFormatter = function (price) {
 
 export function xiaoquSearch(e) {
   e.preventDefault();
+  showList();
   var xiaoqu = $("#xiaoqu-locate input").val();
   fetch(search_url, {
     mode: "cors",
@@ -62,6 +63,12 @@ export function xiaoquSearch(e) {
     });
 }
 
+function showList() {
+  var firstpage = $(".carousel-item").eq(0);
+  if (!firstpage.hasClass("active")) {
+    $("#info-prev").trigger("click");
+  }
+}
 function insertOneItem(element, index) {
   var $elem = $(
     `
@@ -79,23 +86,31 @@ function insertOneItem(element, index) {
           `
   );
   var coordinates = transform(element.geometry.coordinates, code, "EPSG:3857");
-  addTag(coordinates);
+  addTag(coordinates, index);
   $elem.on("click", function (elem) {
+    // 获得选择的小区
     var item_index = $(this).attr("_id");
     var item = searchResults[item_index];
-    var coordinates = transform(item.geometry.coordinates, code, "EPSG:3857");
-    changeCenter(coordinates);
+    // 重新定位到该小区
+    var transformedCor = transform(
+      item.geometry.coordinates,
+      code,
+      "EPSG:3857"
+    );
+    changeCenter(transformedCor);
+    addSelect(transformedCor);
     showInfo(item);
   });
   searchPanel.append($elem);
 }
 
 function insertItem(js) {
-  js.forEach(insertOneItem);
+  js.forEach((element, index) => insertOneItem(element, index));
 }
 
 export function advancedSearch(e) {
   e.preventDefault();
+  showList();
   var multipolygon = getMultiPolygon();
   var price = getPriceRange();
 

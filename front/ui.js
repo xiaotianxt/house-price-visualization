@@ -1,7 +1,7 @@
 /*
  * @Author: 小田
  * @Date: 2021-05-31 11:26:45
- * @LastEditTime: 2021-05-31 20:28:49
+ * @LastEditTime: 2021-06-05 00:03:47
  */
 
 import Chart from "chart.js/auto";
@@ -99,11 +99,13 @@ export function getPriceRange() {
 export function showInfo(item) {
   console.log(item);
 
-  $("#info-next")
-    .trigger("click")
-    .after((e) => {
-      getPrice(item);
-    });
+  var firstpage = $(".carousel-item").eq(0);
+  if (firstpage.hasClass("active")) {
+    $("#info-next").trigger("click");
+  }
+
+  getPrice(item);
+
   $("#search-result-info-title").html(item.properties.xiaoqu);
 }
 

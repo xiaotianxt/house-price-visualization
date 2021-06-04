@@ -1,7 +1,7 @@
 /*
  * @Author: 小田
  * @Date: 2021-05-31 01:00:05
- * @LastEditTime: 2021-06-04 23:32:43
+ * @LastEditTime: 2021-06-05 00:08:49
  */
 
 import { Map, View, Feature } from "ol";
@@ -13,6 +13,8 @@ import { Style, Circle, Stroke, Fill } from "ol/style";
 import { Draw, Modify, Select, Snap } from "ol/interaction";
 
 import { GCJ02 } from "ol-proj-ch";
+import { showInfo } from "./ui";
+import { searchResults } from "./server";
 /* GCJ02 */
 const code = GCJ02.CODE;
 
@@ -54,14 +56,44 @@ function initXiaoquLayer() {
     usage: "xiaoqu",
   });
   map.addLayer(xiaoquLayer);
+
+  xiaoquSelect = new Select({
+    style: new Style({
+      image: new Circle({
+        radius: 10,
+        stroke: new Stroke({
+          color: "#f7ce55",
+          width: 3,
+        }),
+        fill: new Fill({
+          color: "#f4d886",
+        }),
+      }),
+    }),
+    layer: [xiaoquLayer],
+  });
+  xiaoquSelect.on("select", (e) => {
+    var selFeature = e.selected[0];
+    changeCenter(selFeature.getGeometry().getFirstCoordinate());
+    showInfo(searchResults[selFeature.values_._id]);
+  });
+  map.addInteraction(xiaoquSelect);
 }
-export function addTag(coordinates) {
+export function addSelect(coordinates) {
+  var feature = xiaoquSource.getClosestFeatureToCoordinate(coordinates);
+  console.log("found feature");
+  xiaoquSelect.getFeatures().push(feature);
+}
+
+function getItem() {}
+export function addTag(coordinates, id) {
   if (xiaoquLayer == null) {
     initXiaoquLayer();
   }
   xiaoquSource.addFeature(
     new Feature({
       geometry: new Point(coordinates),
+      _id: id,
     })
   );
   console.log(xiaoquLayer.getSource());
@@ -74,6 +106,23 @@ export function changeCenter(coordinates) {
     duration: 1000,
   });
 }
+
+var selectedStyleFunction = function (feature, resolution) {
+  console.log("setting new style");
+  return [
+    new Style({
+      stroke: new Stroke({
+        color: "white",
+        lineCap: "butt",
+        lineJoin: "bevel",
+        width: 3,
+      }),
+      fill: new Fill({
+        color: "black",
+      }),
+    }),
+  ];
+};
 
 export function initMap() {
   view = new View({
@@ -106,7 +155,9 @@ function initInteraction() {
   polygonModify = new Modify({
     source: polygonSource,
   });
-  polygonSelect = new Select({});
+  polygonSelect = new Select({
+    layers: [polygonLayer],
+  });
   polygonSnap = new Snap({
     source: polygonSource,
   });
@@ -118,7 +169,9 @@ function removeInteraction() {
   map.removeInteraction(polygonSnap);
   map.removeInteraction(polygonDraw);
 
-  polygonSelect = new Select();
+  polygonSelect = new Select({
+    layers: [polygonLayer],
+  });
 }
 
 function initMapClick() {
