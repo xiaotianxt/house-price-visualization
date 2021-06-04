@@ -1,7 +1,7 @@
 /*
  * @Author: 小田
  * @Date: 2021-05-31 01:00:05
- * @LastEditTime: 2021-06-03 00:02:32
+ * @LastEditTime: 2021-06-04 23:32:43
  */
 
 import { Map, View, Feature } from "ol";
@@ -22,7 +22,12 @@ const $ = require("jquery");
 export var map = null;
 export var view = null;
 
-export var isDrawing = false;
+// 小区点图层
+export var xiaoquSource = null;
+export var xiaoquLayer = null;
+export var xiaoquSelect = null;
+
+// 多边形编辑图层
 export var polygonSource = null; // 多边形矢量
 export var polygonLayer = null; // 多边形矢量图层
 export var polygonDraw = null; // 绘制多边形
@@ -30,25 +35,10 @@ export var polygonModify = null; // 编辑多边形
 export var polygonSelect = null; // 选择多边形
 export var polygonSnap = null;
 
-export function addTag(coordinates) {
-  map.getLayers().forEach((item, index) => {
-    console.log("选择了第：" + index + "项");
-    console.log(item);
-    if (index != 0 && item.values_.usage == "xiaoqu") {
-      map.removeLayer(item);
-    }
-  });
-  const features = [
-    new Feature({
-      geometry: new Point(coordinates),
-    }),
-  ];
-  // create the source and layer for random features
-  const vectorSource = new VectorSource({
-    features,
-  });
-  const vectorLayer = new VectorLayer({
-    source: vectorSource,
+function initXiaoquLayer() {
+  xiaoquSource = new VectorSource();
+  xiaoquLayer = new VectorLayer({
+    source: xiaoquSource,
     style: new Style({
       image: new Circle({
         radius: 8,
@@ -63,7 +53,18 @@ export function addTag(coordinates) {
     }),
     usage: "xiaoqu",
   });
-  map.addLayer(vectorLayer);
+  map.addLayer(xiaoquLayer);
+}
+export function addTag(coordinates) {
+  if (xiaoquLayer == null) {
+    initXiaoquLayer();
+  }
+  xiaoquSource.addFeature(
+    new Feature({
+      geometry: new Point(coordinates),
+    })
+  );
+  console.log(xiaoquLayer.getSource());
 }
 
 export function changeCenter(coordinates) {

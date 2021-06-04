@@ -1,7 +1,7 @@
 /*
  * @Author: 小田
  * @Date: 2021-05-31 13:24:12
- * @LastEditTime: 2021-06-03 01:45:06
+ * @LastEditTime: 2021-06-04 23:28:34
  */
 
 // jQuery
@@ -78,12 +78,13 @@ function insertOneItem(element, index) {
               </a>
           `
   );
+  var coordinates = transform(element.geometry.coordinates, code, "EPSG:3857");
+  addTag(coordinates);
   $elem.on("click", function (elem) {
     var item_index = $(this).attr("_id");
     var item = searchResults[item_index];
     var coordinates = transform(item.geometry.coordinates, code, "EPSG:3857");
     changeCenter(coordinates);
-    addTag(coordinates);
     showInfo(item);
   });
   searchPanel.append($elem);
