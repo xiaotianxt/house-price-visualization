@@ -1,7 +1,7 @@
 <!--
  * @Author: 小田
  * @Date: 2021-05-29 14:09:12
- * @LastEditTime: 2021-06-04 23:34:46
+ * @LastEditTime: 2021-06-05 16:01:01
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -16,7 +16,7 @@
     <title>小区房价可视化平台</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.css" rel="stylesheet">
-    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
+    <script defer src="./node_modules/@fortawesome/fontawesome-free/js/all.js"></script>
 
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="loader.css">
@@ -99,7 +99,7 @@
     </div>
     <div class="col-md-4 col-sm-6 col-xs-12 sidebar sidebar-right float-sm-left float-md-right float-lg-right"
         id="accordion-right">
-        <div class="sidebar-body flex-sm-column-reverse d-sm-flex d-md-flex d-lg-flex">
+        <div class="sidebar-body flex-sm-column d-sm-flex d-md-flex d-lg-flex">
             <div class="sidebar-item-content card m-1" id="xiaoqu-search-card" style="display:none">
                 <div class="card-header">
                     小区查询
@@ -119,7 +119,7 @@
                 </div>
             </div>
             <div class="sidebar-item-button m-1 float-sm-right float-md-right float-lg-right">
-                <button id="xiaoqu-search-button" class="btn btn-default pull-right bg-light m-1">
+                <button id="xiaoqu-search-button" class="btn btn-default float-right bg-light m-1">
                     <div class="fa fa-search"></div>
                 </button>
             </div>
@@ -206,10 +206,52 @@
                             <div class="custom-control custom-checkbox" data-toggle="collapse" data-target="#transport">
                                 <input type="checkbox" name="transport-checkbox" id="transport-checkbox"
                                     class="custom-control-input">
-                                <label for="transport-checkbox" class="custom-control-label">通行距离查询</label>
+                                <label for="transport-checkbox" class="custom-control-label">通行时间</label>
                             </div>
 
                             <div class="collapse" id="transport">
+                                <div class="card-body bg-transparent p-1 flex-center form-check">
+                                    <div class="btn-group btn-group-toggle input-group" data-toggle="buttons">
+                                        <label class="btn btn-outline-primary" id="transport-choose-locate">
+                                            <div class="fas fa-location-arrow"></div>
+                                        </label>
+                                        <label class="btn btn-outline-primary active">
+                                            <input type="radio" name="options" class="transport-type"
+                                                id="transport-type-walk" checked>
+                                            <div class="fas fa-walking"></div>
+                                        </label>
+                                        <label class="btn btn-outline-success">
+                                            <input type="radio" name="options" class="transport-type"
+                                                id="transport-type-bicycle">
+                                            <i class="fa fa-bicycle" aria-hidden="true"></i>
+                                        </label>
+                                        <label class="btn btn-outline-info">
+                                            <input type="radio" name="options" class="transport-type"
+                                                id="transport-type-car">
+                                            <i class="fa fa-car" aria-hidden="true"></i>
+                                        </label>
+                                    </div>
+                                    <div class="input-group mb-3 was-validated">
+                                        <input type="text" id="transport-time" class="form-control " aria-label="通行时间"
+                                            aria-describedby="transport-minite" required>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" id="transport-minite"> 分钟 </span>
+                                        </div>
+                                        <div class="invalid-feedback">请填写时间</div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="custom-control custom-checkbox" data-toggle="collapse" data-target="#area">
+                                <input type="checkbox" name="area-checkbox" id="area-checkbox"
+                                    class="custom-control-input">
+                                <label for="area-checkbox" class="custom-control-label">区域</label>
+                            </div>
+
+                            <div class="collapse" id="area">
                                 <div class="card-body bg-transparent p-1">
 
                                 </div>
@@ -224,7 +266,7 @@
                 </div>
             </div>
             <div class="sidebar-item-button m-1 float-sm-right float-md-right float-lg-right">
-                <button id="advanced-search-button" class="btn btn-default pull-right bg-light m-1">
+                <button id="advanced-search-button" class="btn btn-default float-right bg-light m-1">
                     <div class="fa fa-check"></div>
                 </button>
             </div>

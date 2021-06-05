@@ -1,7 +1,7 @@
 /*
  * @Author: 小田
  * @Date: 2021-05-31 01:00:05
- * @LastEditTime: 2021-06-05 00:08:49
+ * @LastEditTime: 2021-06-05 15:45:48
  */
 
 import { Map, View, Feature } from "ol";
@@ -36,6 +36,8 @@ export var polygonDraw = null; // 绘制多边形
 export var polygonModify = null; // 编辑多边形
 export var polygonSelect = null; // 选择多边形
 export var polygonSnap = null;
+
+export var isDrawing = false;
 
 function initXiaoquLayer() {
   xiaoquSource = new VectorSource();
@@ -74,6 +76,9 @@ function initXiaoquLayer() {
   });
   xiaoquSelect.on("select", (e) => {
     var selFeature = e.selected[0];
+    if (selFeature == null || isDrawing) {
+      return;
+    }
     changeCenter(selFeature.getGeometry().getFirstCoordinate());
     showInfo(searchResults[selFeature.values_._id]);
   });
@@ -81,7 +86,7 @@ function initXiaoquLayer() {
 }
 export function addSelect(coordinates) {
   var feature = xiaoquSource.getClosestFeatureToCoordinate(coordinates);
-  console.log("found feature");
+  xiaoquSelect.getFeatures().clear();
   xiaoquSelect.getFeatures().push(feature);
 }
 
@@ -203,6 +208,7 @@ export function initPolygonEdit() {
     }),
   });
   map.addLayer(polygonLayer);
+  isDrawing = true;
   initInteraction();
 }
 
@@ -233,6 +239,7 @@ export function editPolygon(e) {
 export function finishPolygon(e) {
   e.preventDefault();
   removeInteraction();
+  isDrawing = false;
 }
 
 export function getMultiPolygon() {
@@ -286,4 +293,49 @@ export function stopDraw() {
   map.addInteraction(polygonSelect);
   map.addInteraction(polygonSnap);
   polygonDraw = null;
+}
+
+export var transSource = null;
+export var transLayer = null;
+export var transDraw = null;
+
+function initTransport() {
+  transSource = new VectorSource();
+  transLayer = new VectorLayer({
+    source: transSource,
+    style: new Style({
+      image: new Circle({
+        radius: 8,
+        stroke: new Stroke({
+          color: "#77cbb7",
+          width: 3,
+        }),
+        fill: new Fill({
+          color: "#57ab97",
+        }),
+      }),
+    }),
+    usage: "transport",
+  });
+  transDraw = new Draw({
+    source: transSource,
+    type: "Point",
+  });
+  transDraw.on("drawend", function (e) {
+    if (transSource.getFeatures().length == 1) {
+      transSource.removeFeature(transSource.getFeatures()[0]);
+    }
+  });
+  map.addLayer(transLayer);
+  map.addInteraction(transDraw);
+}
+
+export function clearTransportLocate() {
+  map.removeInteraction(transDraw);
+}
+
+export function drawTransportLocate() {
+  map.removeLayer(transLayer);
+  map.removeInteraction(transDraw);
+  initTransport();
 }

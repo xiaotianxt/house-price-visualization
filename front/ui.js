@@ -1,12 +1,13 @@
 /*
  * @Author: 小田
  * @Date: 2021-05-31 11:26:45
- * @LastEditTime: 2021-06-05 00:03:47
+ * @LastEditTime: 2021-06-05 16:05:46
  */
 
 import Chart from "chart.js/auto";
 
 import { getPrice } from "./server";
+import { clearTransportLocate, drawTransportLocate } from "./map";
 export var chart = null;
 export var data = null;
 
@@ -14,7 +15,7 @@ function initSliders() {
   const func = function (contents, buttons) {
     contents.find(".close").on("click", function (e) {
       var index = contents.find(".close").index(this);
-      contents.eq(index).slideUp((e) => {
+      contents.eq(index).slideUp(() => {
         buttons.eq(index).slideDown(10);
       });
     });
@@ -36,6 +37,20 @@ function initSliders() {
 
   func(leftContents, leftButtons);
   func(rightContents, rightButtons);
+
+  $("#transport-choose-locate").on("click", function (e) {
+    if ($(this).hasClass("active")) {
+      // 如果已经在active状态, 那么用户取消绘制中心点
+      clearTransportLocate();
+
+      $(this).removeClass("active");
+    } else {
+      // 否则用户需要开始绘制一个中心点
+      drawTransportLocate();
+
+      $(this).addClass("active");
+    }
+  });
 }
 
 function initChart() {
@@ -94,6 +109,16 @@ export function getPriceRange() {
   maxPrice = maxPrice != "" ? maxPrice : 0xffffff;
 
   return { min: parseInt(minPrice), max: parseInt(maxPrice) };
+}
+
+export function getTransportRange() {
+  if (!$("#transport-checkbox").is(":checked")) {
+    return null;
+  }
+
+  var transportType = $(".transport-type:checked").attr("id");
+  var time = parseInt($("#transport-time").val());
+  return { type: transportType, time: time };
 }
 
 export function showInfo(item) {

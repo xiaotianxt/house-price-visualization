@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.3",
     "bootstrap": "^5.0.1",
     "chart.js": "^3.3.2",
     "coordtransform": "^2.1.2",

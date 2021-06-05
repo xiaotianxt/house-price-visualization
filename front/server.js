@@ -1,7 +1,7 @@
 /*
  * @Author: 小田
  * @Date: 2021-05-31 13:24:12
- * @LastEditTime: 2021-06-05 00:13:08
+ * @LastEditTime: 2021-06-05 16:06:36
  */
 
 // jQuery
@@ -12,10 +12,10 @@ window.$ = window.jQuery;
 
 // map.js
 import { changeCenter, addTag, getMultiPolygon, addSelect } from "./map";
-import { getPriceRange, showInfo, updateChart } from "./ui";
+import { getPriceRange, showInfo, updateChart, getTransportRange } from "./ui";
 import { transform } from "ol/proj";
 
-const url = "https://house.xiaotianxt.cn";
+const url = "https://localhost:5000";
 const search_url = url + "/search";
 export const searchPanel = $("#search-result-panel"); // 结果记录位置
 export var searchResults; // 小区搜索结果
@@ -51,16 +51,7 @@ export function xiaoquSearch(e) {
     .then((res) => {
       return res.json();
     })
-    .then((js) => {
-      searchResults = js;
-      searchPanel.children().remove(); // remove items
-
-      if ($("#result-card").css("display") == "none") {
-        $("#result-button").trigger("click");
-      }
-
-      insertItem(js);
-    });
+    .then(solveResult);
 }
 
 function showList() {
@@ -113,8 +104,14 @@ export function advancedSearch(e) {
   showList();
   var multipolygon = getMultiPolygon();
   var price = getPriceRange();
+  var transport = getTransportRange();
 
-  var data = { polygon: multipolygon, price: price, type: "advanced" };
+  var data = {
+    polygon: multipolygon,
+    price: price,
+    transport: transport,
+    type: "advanced",
+  };
   console.log(data);
   fetch(search_url, {
     mode: "cors",
@@ -125,17 +122,20 @@ export function advancedSearch(e) {
     },
   })
     .then((response) => response.json())
-    .then((js) => {
-      searchResults = js;
-      searchPanel.children().remove(); // remove items
-
-      if ($("#result-card").css("display") == "none") {
-        $("#result-button").trigger("click");
-      }
-
-      insertItem(js);
-    });
+    .then(solveResult);
 }
+
+function solveResult(js) {
+  searchResults = js;
+  searchPanel.children().remove(); // remove items
+
+  if ($("#result-card").css("display") == "none") {
+    $("#result-button").trigger("click");
+  }
+
+  insertItem(js);
+}
+
 export function polygonSearch(polygons) {
   polygons.forEach((item) => {
     console.log(item);
