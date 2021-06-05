@@ -1,7 +1,7 @@
 /*
  * @Author: 小田
  * @Date: 2021-05-31 13:24:12
- * @LastEditTime: 2021-06-05 16:48:10
+ * @LastEditTime: 2021-06-05 18:50:51
  */
 
 // jQuery
@@ -21,7 +21,7 @@ import {
 import { getPriceRange, showInfo, updateChart, getTransportRange } from "./ui";
 import { transform } from "ol/proj";
 
-const url = "http://localhost:5000";
+const url = "https://house.xiaotianxt.cn";
 const search_url = url + "/search";
 export const searchPanel = $("#search-result-panel"); // 结果记录位置
 export var searchResults; // 小区搜索结果
