@@ -1,7 +1,7 @@
 <!--
  * @Author: 小田
  * @Date: 2021-05-29 14:09:12
- * @LastEditTime: 2021-06-05 16:01:01
+ * @LastEditTime: 2021-06-05 17:20:13
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -37,7 +37,7 @@
     <div id="map">
     </div>
 
-    <div class="col-md-5 col-sm-6 col-xs-12 sidebar sidebar-left float-sm-left float-md-left float-lg-left"
+    <div class="col-md-4 col-sm-6 col-xs-12 sidebar sidebar-left float-sm-left float-md-left float-lg-left"
         id="accordion-left">
         <div class="sidebar-body flex-sm-column d-sm-flex d-md-flex d-lg-flex">
             <div class="sidebar-item-content card m-1" id="result-card" style="display:none">
@@ -211,35 +211,45 @@
 
                             <div class="collapse" id="transport">
                                 <div class="card-body bg-transparent p-1 flex-center form-check">
-                                    <div class="btn-group btn-group-toggle input-group" data-toggle="buttons">
-                                        <label class="btn btn-outline-primary" id="transport-choose-locate">
-                                            <div class="fas fa-location-arrow"></div>
-                                        </label>
-                                        <label class="btn btn-outline-primary active">
-                                            <input type="radio" name="options" class="transport-type"
-                                                id="transport-type-walk" checked>
-                                            <div class="fas fa-walking"></div>
-                                        </label>
-                                        <label class="btn btn-outline-success">
-                                            <input type="radio" name="options" class="transport-type"
-                                                id="transport-type-bicycle">
-                                            <i class="fa fa-bicycle" aria-hidden="true"></i>
-                                        </label>
-                                        <label class="btn btn-outline-info">
-                                            <input type="radio" name="options" class="transport-type"
-                                                id="transport-type-car">
-                                            <i class="fa fa-car" aria-hidden="true"></i>
-                                        </label>
-                                    </div>
-                                    <div class="input-group mb-3 was-validated">
-                                        <input type="text" id="transport-time" class="form-control " aria-label="通行时间"
-                                            aria-describedby="transport-minite" required>
-                                        <div class="input-group-append">
-                                            <span class="input-group-text" id="transport-minite"> 分钟 </span>
-                                        </div>
-                                        <div class="invalid-feedback">请填写时间</div>
+                                    <div class="d-flex">
 
+                                        <div class="btn-group btn-group-toggle input-group" data-toggle="buttons">
+                                            <label class="btn btn-outline-primary active">
+                                                <input type="radio" name="options" class="transport-type"
+                                                    id="transport-type-walk" checked>
+                                                <div class="fas fa-walking"></div>
+                                            </label>
+                                            <label class="btn btn-outline-success">
+                                                <input type="radio" name="options" class="transport-type"
+                                                    id="transport-type-bicycle">
+                                                <i class="fa fa-bicycle" aria-hidden="true"></i>
+                                            </label>
+                                            <label class="btn btn-outline-info">
+                                                <input type="radio" name="options" class="transport-type"
+                                                    id="transport-type-car">
+                                                <i class="fa fa-car" aria-hidden="true"></i>
+                                            </label>
+                                        </div>
                                     </div>
+
+                                    <div class="d-flex">
+
+                                        <div class="input-group mb-3 was-validated">
+                                            <div class="btn-group btn-group-toggle">
+                                                <label class="btn btn-outline-dark" id="transport-choose-locate">
+                                                    <div class="fas fa-location-arrow"></div>
+                                                </label>
+                                            </div>
+                                            <input type="text" id="transport-time" class="form-control "
+                                                aria-label="通行时间" aria-describedby="transport-minite" required>
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" id="transport-minite"> 分钟 </span>
+                                            </div>
+                                            <div class="invalid-feedback">请填写时间</div>
+
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>

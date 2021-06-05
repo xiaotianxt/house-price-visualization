@@ -1,7 +1,7 @@
 /*
  * @Author: 小田
  * @Date: 2021-05-31 13:24:12
- * @LastEditTime: 2021-06-05 16:06:36
+ * @LastEditTime: 2021-06-05 16:48:10
  */
 
 // jQuery
@@ -11,11 +11,17 @@ jQuery = $;
 window.$ = window.jQuery;
 
 // map.js
-import { changeCenter, addTag, getMultiPolygon, addSelect } from "./map";
+import {
+  changeCenter,
+  addTag,
+  getMultiPolygon,
+  addSelect,
+  clearXiaoqu,
+} from "./map";
 import { getPriceRange, showInfo, updateChart, getTransportRange } from "./ui";
 import { transform } from "ol/proj";
 
-const url = "https://localhost:5000";
+const url = "http://localhost:5000";
 const search_url = url + "/search";
 export const searchPanel = $("#search-result-panel"); // 结果记录位置
 export var searchResults; // 小区搜索结果
@@ -128,6 +134,7 @@ export function advancedSearch(e) {
 function solveResult(js) {
   searchResults = js;
   searchPanel.children().remove(); // remove items
+  clearXiaoqu();
 
   if ($("#result-card").css("display") == "none") {
     $("#result-button").trigger("click");

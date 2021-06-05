@@ -1,7 +1,7 @@
 '''
 Author: 小田
 Date: 2021-05-19 21:00:00
-LastEditTime: 2021-05-30 21:59:09
+LastEditTime: 2021-06-05 16:34:44
 '''
 
 from geometry import *
@@ -31,5 +31,5 @@ class RequestHandler():
     def query_within_today_name(self, xiaoqu):
         return json.dumps(list(self.db.today_name(xiaoqu)), cls=JSONEncoder)
 
-    def query_within_today_advanced(self, coordinates, min_price, max_price):
-        return json.dumps(list(self.db.today_advanced(coordinates, min_price, max_price)), cls=JSONEncoder)
+    def query_within_today_advanced(self, coordinates, price, transport):
+        return json.dumps(list(self.db.today_advanced(coordinates, price, transport)), cls=JSONEncoder)

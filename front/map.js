@@ -1,7 +1,7 @@
 /*
  * @Author: 小田
  * @Date: 2021-05-31 01:00:05
- * @LastEditTime: 2021-06-05 15:45:48
+ * @LastEditTime: 2021-06-05 17:16:22
  */
 
 import { Map, View, Feature } from "ol";
@@ -89,8 +89,6 @@ export function addSelect(coordinates) {
   xiaoquSelect.getFeatures().clear();
   xiaoquSelect.getFeatures().push(feature);
 }
-
-function getItem() {}
 export function addTag(coordinates, id) {
   if (xiaoquLayer == null) {
     initXiaoquLayer();
@@ -215,6 +213,7 @@ export function initPolygonEdit() {
 export function addPolygon(e) {
   e.preventDefault();
   removeInteraction();
+  isDrawing = true;
   // 添加多边形
   if (polygonLayer == null) {
     initPolygonEdit();
@@ -226,6 +225,8 @@ export function addPolygon(e) {
 
 export function editPolygon(e) {
   e.preventDefault();
+  isDrawing = true;
+
   if (polygonLayer == null) {
     return; // 此时不需要考虑编辑多边形, 失效
   }
@@ -257,7 +258,7 @@ export function getMultiPolygon() {
     .map((polygon) => {
       var coord = polygon.getCoordinates()[0];
       console.log(coord);
-      return [coord.map((coord) => transform(coord, "EPSG:3857", code))];
+      return [coord.map((item) => transform(item, "EPSG:3857", code))];
     });
 
   // 需要将所有坐标转化成其他的
@@ -268,15 +269,16 @@ export function getMultiPolygon() {
 export function removePolygon(e) {
   e.preventDefault();
   removeInteraction();
+  isDrawing = true;
 
   map.addInteraction(polygonSelect);
 
   if (polygonLayer == null) {
     // 此时不需要考虑删除多边形, 因为压根没有编辑多边形
   }
-  polygonSelect.on("select", function (e) {
-    e.preventDefault();
-    e.selected.forEach((item) => {
+  polygonSelect.on("select", function (e_) {
+    e_.preventDefault();
+    e_.selected.forEach((item) => {
       polygonSource.removeFeature(item);
     });
   });
@@ -286,6 +288,7 @@ export function removeAllPolygon(e) {
   e.preventDefault();
   removeInteraction();
   polygonSource.clear();
+  isDrawing = false;
 }
 
 export function stopDraw() {
@@ -332,10 +335,28 @@ function initTransport() {
 
 export function clearTransportLocate() {
   map.removeInteraction(transDraw);
+  isDrawing = false;
 }
 
 export function drawTransportLocate() {
+  isDrawing = true;
   map.removeLayer(transLayer);
   map.removeInteraction(transDraw);
   initTransport();
+}
+
+export function getTransportPoint() {
+  if (transSource.getFeatures().length == 1) {
+    return transform(
+      transSource.getFeatures()[0].getGeometry().getCoordinates(),
+      "EPSG:3857",
+      code
+    );
+  } else {
+    return null;
+  }
+}
+
+export function clearXiaoqu() {
+  if (xiaoquLayer != null) xiaoquSource.clear();
 }

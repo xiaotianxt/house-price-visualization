@@ -1,13 +1,17 @@
 /*
  * @Author: 小田
  * @Date: 2021-05-31 11:26:45
- * @LastEditTime: 2021-06-05 16:05:46
+ * @LastEditTime: 2021-06-05 16:14:55
  */
 
 import Chart from "chart.js/auto";
 
 import { getPrice } from "./server";
-import { clearTransportLocate, drawTransportLocate } from "./map";
+import {
+  clearTransportLocate,
+  drawTransportLocate,
+  getTransportPoint,
+} from "./map";
 export var chart = null;
 export var data = null;
 
@@ -118,7 +122,13 @@ export function getTransportRange() {
 
   var transportType = $(".transport-type:checked").attr("id");
   var time = parseInt($("#transport-time").val());
-  return { type: transportType, time: time };
+  var geometry = getTransportPoint();
+
+  if (geometry == null) {
+    return null;
+  }
+
+  return { type: transportType, time: time, coordinates: geometry };
 }
 
 export function showInfo(item) {

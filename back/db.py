@@ -1,11 +1,18 @@
 '''
 Author: 小田
 Date: 2021-05-19 21:05:42
-LastEditTime: 2021-05-30 21:58:37
+LastEditTime: 2021-06-05 17:18:41
 '''
+from os import PRIO_PROCESS
 from config import CONFIG
 from pymongo import MongoClient
 from geometry import *
+
+EVALUATE = {
+    'transport-type-walk': 50,
+    'transport-type-bicycle': 100,
+    'transport-type-car': 250
+}
 
 
 class db():
@@ -88,16 +95,12 @@ class db():
         print("QUERY: ", query)
         return self.today.find(query)
 
-    def today_advanced(self, coordinates, min_price, max_price):
+    def today_advanced(self, coordinates, price_range, transport):
+
         if coordinates is None:
-            query = {
-                "$and": [
-                    {"properties.price": {"$gt": min_price}},
-                    {"properties.price": {"$lt": max_price}}
-                ]
-            }
+            query_polygon = {}
         else:
-            query = {
+            query_polygon = {
                 'geometry': {
                     '$geoWithin': {
                         '$geometry': {
@@ -106,12 +109,31 @@ class db():
                         }
                     }
                 },
-                "$and": [
-                    {"properties.price": {"$gt": min_price}},
-                    {"properties.price": {"$lt": max_price}}
-                ]
             }
-        return self.today_filter(query)
+        if price_range is None:
+            query_price = []
+        else:
+            query_price = [
+                {"properties.price": {"$gt": price_range['min']}},
+                {"properties.price": {"$lt": price_range['max']}}]
+
+        if transport is None:
+            query_transport = {}
+        else:
+            query_transport = {
+                'geometry': {
+                    "$near": {
+                        "$geometry": {
+                            'type': "Point",
+                            'coordinates': transport['coordinates']
+                        },
+                        '$maxDistance': EVALUATE[transport['type']] * transport['time'],
+                        '$minDistance': 0
+                    }
+                }
+            }
+        print(query_transport)
+        return self.today_filter({"$and": [query_polygon, query_transport, *query_price]})
 
 
 if __name__ == '__main__':
