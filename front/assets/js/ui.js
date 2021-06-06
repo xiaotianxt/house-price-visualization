@@ -1,7 +1,7 @@
 /*
  * @Author: 小田
  * @Date: 2021-05-31 11:26:45
- * @LastEditTime: 2021-06-05 16:14:55
+ * @LastEditTime: 2021-06-06 23:41:51
  */
 
 import Chart from "chart.js/auto";
@@ -132,7 +132,7 @@ export function getTransportRange() {
 }
 
 export function showInfo(item) {
-  console.log(item);
+  // console.log(item);
 
   var firstpage = $(".carousel-item").eq(0);
   if (firstpage.hasClass("active")) {
@@ -148,7 +148,7 @@ const dates = ["2015", "2016", "2017", "2018", "2019", "2020", "2021"];
 
 export function updateChart(prices) {
   initChart();
-  console.log(prices);
+  // console.log(prices);
   dates.forEach((item, index) => {
     chart.data.labels.push(item);
     chart.data.datasets.forEach((dataset) => {

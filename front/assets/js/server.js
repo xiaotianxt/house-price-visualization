@@ -118,7 +118,7 @@ export function advancedSearch(e) {
     transport: transport,
     type: "advanced",
   };
-  console.log(data);
+  // console.log(data);
   fetch(search_url, {
     mode: "cors",
     method: "post",
@@ -145,7 +145,7 @@ function solveResult(js) {
 
 export function polygonSearch(polygons) {
   polygons.forEach((item) => {
-    console.log(item);
+    // console.log(item);
   });
 }
 
@@ -154,7 +154,7 @@ export function getPrice(item) {
     item: item.properties,
     type: "prices",
   };
-  console.log(JSON.stringify(item));
+  // console.log(JSON.stringify(item));
   return fetch(search_url, {
     mode: "cors",
     method: "post",

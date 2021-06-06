@@ -99,7 +99,7 @@ export function addTag(coordinates, id) {
       _id: id,
     })
   );
-  console.log(xiaoquLayer.getSource());
+  // console.log(xiaoquLayer.getSource());
 }
 
 export function changeCenter(coordinates) {
@@ -111,7 +111,7 @@ export function changeCenter(coordinates) {
 }
 
 var selectedStyleFunction = function (feature, resolution) {
-  console.log("setting new style");
+  // console.log("setting new style");
   return [
     new Style({
       stroke: new Stroke({
@@ -257,12 +257,12 @@ export function getMultiPolygon() {
     })
     .map((polygon) => {
       var coord = polygon.getCoordinates()[0];
-      console.log(coord);
+      // console.log(coord);
       return [coord.map((item) => transform(item, "EPSG:3857", code))];
     });
 
   // 需要将所有坐标转化成其他的
-  console.log(polygons);
+  // console.log(polygons);
   return polygons;
 }
 
