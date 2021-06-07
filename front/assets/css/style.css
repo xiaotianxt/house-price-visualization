@@ -1,0 +1,151 @@
+body {
+  overflow: hidden;
+}
+
+.navbar-offset {
+  margin-top: 50px;
+}
+
+#map {
+  position: absolute;
+  top: 50px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+}
+
+#map .ol-zoom-in {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  font: inherit;
+  list-style: none;
+  margin: 0;
+  outline: 0;
+  overflow: visible;
+  padding: 0;
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 8px;
+  display: block;
+  height: 29px;
+  left: 0px;
+  overflow: hidden;
+  position: absolute;
+  cursor: pointer;
+  width: 29px;
+  z-index: 2;
+  box-sizing: border-box;
+  transition: background-color 0.16s ease-out;
+  bottom: 0px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+#map .ol-zoom-out {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  font: inherit;
+  list-style: none;
+  margin: 0;
+  outline: 0;
+  overflow: visible;
+  padding: 0;
+  color: inherit;
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 8px;
+  display: block;
+  height: 29px;
+  left: 0px;
+  overflow: hidden;
+  position: absolute;
+  cursor: pointer;
+  width: 29px;
+  z-index: 2;
+  box-sizing: border-box;
+  transition: background-color 0.16s ease-out;
+  top: 0px;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+}
+
+#map .ol-rotate,
+#map .ol-attribution {
+  display: none;
+}
+
+#map .ol-zoom-in > span,
+#map .ol-zoom-out > span {
+  display: none;
+}
+
+#map .ol-zoom {
+  position: fixed;
+  bottom: 5em;
+  right: 3em;
+  top: auto;
+}
+
+#map .ol-zoom button:hover {
+  font: bolder;
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.zoom-top-opened-sidebar {
+  margin-top: 5px;
+}
+
+.zoom-top-collapsed {
+  margin-top: 45px;
+}
+
+.mini-submenu-item {
+  display: none;
+  background-color: rgba(255, 255, 255, 0.46);
+  border: 1px solid rgba(0, 0, 0, 0.9);
+  border-radius: 4px;
+  padding: 9px;
+  /*position: relative;*/
+  width: 42px;
+  text-align: center;
+}
+
+.mini-submenu-left-group {
+  position: absolute;
+  top: 60px;
+  left: 0.5em;
+  z-index: 40;
+}
+
+.mini-submenu-right {
+  position: absolute;
+  top: 60px;
+  right: 0.5em;
+  z-index: 40;
+}
+
+#map {
+  z-index: 35;
+}
+
+.sidebar {
+  z-index: 45;
+}
+
+.main-row {
+  position: relative;
+  top: 0;
+}
+
+.mini-submenu-item:hover {
+  cursor: pointer;
+  transition: cubic-bezier(0.075, 0.82, 0.165, 1);
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.slide-submenu {
+  display: inline-block;
+  padding: 0 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
