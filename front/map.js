@@ -1,7 +1,7 @@
 /*
  * @Author: 小田
  * @Date: 2021-05-31 01:00:05
- * @LastEditTime: 2021-06-05 17:16:22
+ * @LastEditTime: 2021-06-07 10:45:36
  */
 
 import { Map, View, Feature } from "ol";
@@ -76,7 +76,12 @@ function initXiaoquLayer() {
   });
   xiaoquSelect.on("select", (e) => {
     var selFeature = e.selected[0];
-    if (selFeature == null || isDrawing) {
+    if (
+      selFeature == null ||
+      selFeature == undefined ||
+      e.selected.length < 1 ||
+      isDrawing
+    ) {
       return;
     }
     changeCenter(selFeature.getGeometry().getFirstCoordinate());
@@ -200,7 +205,7 @@ export function initPolygonEdit() {
         color: "rgba(255, 255, 255, 0.5)",
       }),
       stroke: new Stroke({
-        color: "#ffcc33",
+        color: "green",
         width: 2,
       }),
     }),
