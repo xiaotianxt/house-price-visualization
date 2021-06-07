@@ -1,7 +1,7 @@
 /*
  * @Author: 小田
  * @Date: 2021-05-31 01:00:05
- * @LastEditTime: 2021-06-07 11:09:21
+ * @LastEditTime: 2021-06-07 19:42:47
  */
 
 import { Map, View, Feature } from "ol";
@@ -15,12 +15,14 @@ import { Draw, Modify, Select, Snap } from "ol/interaction";
 import { GCJ02 } from "ol-proj-ch";
 import { showInfo } from "./ui";
 import { searchResults } from "./server";
+
 /* GCJ02 */
 const code = GCJ02.CODE;
 
 // jQuery
 const $ = require("jquery");
 
+// openlayers
 export var map = null;
 export var view = null;
 
@@ -36,6 +38,11 @@ export var polygonDraw = null; // 绘制多边形
 export var polygonModify = null; // 编辑多边形
 export var polygonSelect = null; // 选择多边形
 export var polygonSnap = null;
+
+// 交通点图层
+export var transSource = null;
+export var transLayer = null;
+export var transDraw = null;
 
 export var isDrawing = false;
 
@@ -89,48 +96,6 @@ function initXiaoquLayer() {
   });
   map.addInteraction(xiaoquSelect);
 }
-export function addSelect(coordinates) {
-  var feature = xiaoquSource.getClosestFeatureToCoordinate(coordinates);
-  xiaoquSelect.getFeatures().clear();
-  xiaoquSelect.getFeatures().push(feature);
-}
-export function addTag(coordinates, id) {
-  if (xiaoquLayer == null) {
-    initXiaoquLayer();
-  }
-  xiaoquSource.addFeature(
-    new Feature({
-      geometry: new Point(coordinates),
-      _id: id,
-    })
-  );
-  // console.log(xiaoquLayer.getSource());
-}
-
-export function changeCenter(coordinates) {
-  view.animate({
-    center: coordinates,
-    zoom: 17,
-    duration: 1000,
-  });
-}
-
-var selectedStyleFunction = function (feature, resolution) {
-  // console.log("setting new style");
-  return [
-    new Style({
-      stroke: new Stroke({
-        color: "white",
-        lineCap: "butt",
-        lineJoin: "bevel",
-        width: 3,
-      }),
-      fill: new Fill({
-        color: "black",
-      }),
-    }),
-  ];
-};
 
 export function initMap() {
   view = new View({
@@ -171,17 +136,6 @@ function initInteraction() {
   });
 }
 
-function removeInteraction() {
-  map.removeInteraction(polygonModify);
-  map.removeInteraction(polygonSelect);
-  map.removeInteraction(polygonSnap);
-  map.removeInteraction(polygonDraw);
-
-  polygonSelect = new Select({
-    layers: [polygonLayer],
-  });
-}
-
 function initMapClick() {
   map.on("singleclick", function (e) {
     console.log(
@@ -213,6 +167,75 @@ export function initPolygonEdit() {
   map.addLayer(polygonLayer);
   isDrawing = true;
   initInteraction();
+}
+
+function initTransport() {
+  transSource = new VectorSource();
+  transLayer = new VectorLayer({
+    source: transSource,
+    style: new Style({
+      image: new Circle({
+        radius: 8,
+        stroke: new Stroke({
+          color: "#77cbb7",
+          width: 3,
+        }),
+        fill: new Fill({
+          color: "#57ab97",
+        }),
+      }),
+    }),
+    usage: "transport",
+  });
+  transDraw = new Draw({
+    source: transSource,
+    type: "Point",
+  });
+  transDraw.on("drawend", function (e) {
+    if (transSource.getFeatures().length == 1) {
+      transSource.removeFeature(transSource.getFeatures()[0]);
+    }
+  });
+  map.addLayer(transLayer);
+  map.addInteraction(transDraw);
+}
+
+export function addSelect(coordinates) {
+  var feature = xiaoquSource.getClosestFeatureToCoordinate(coordinates);
+  xiaoquSelect.getFeatures().clear();
+  xiaoquSelect.getFeatures().push(feature);
+}
+
+export function addTag(coordinates, id) {
+  if (xiaoquLayer == null) {
+    initXiaoquLayer();
+  }
+  xiaoquSource.addFeature(
+    new Feature({
+      geometry: new Point(coordinates),
+      _id: id,
+    })
+  );
+  // console.log(xiaoquLayer.getSource());
+}
+
+export function changeCenter(coordinates) {
+  view.animate({
+    center: coordinates,
+    zoom: 17,
+    duration: 1000,
+  });
+}
+
+function removeInteraction() {
+  map.removeInteraction(polygonModify);
+  map.removeInteraction(polygonSelect);
+  map.removeInteraction(polygonSnap);
+  map.removeInteraction(polygonDraw);
+
+  polygonSelect = new Select({
+    layers: [polygonLayer],
+  });
 }
 
 export function addPolygon(e) {
@@ -303,46 +326,6 @@ export function stopDraw() {
   polygonDraw = null;
 }
 
-export var transSource = null;
-export var transLayer = null;
-export var transDraw = null;
-
-function initTransport() {
-  transSource = new VectorSource();
-  transLayer = new VectorLayer({
-    source: transSource,
-    style: new Style({
-      image: new Circle({
-        radius: 8,
-        stroke: new Stroke({
-          color: "#77cbb7",
-          width: 3,
-        }),
-        fill: new Fill({
-          color: "#57ab97",
-        }),
-      }),
-    }),
-    usage: "transport",
-  });
-  transDraw = new Draw({
-    source: transSource,
-    type: "Point",
-  });
-  transDraw.on("drawend", function (e) {
-    if (transSource.getFeatures().length == 1) {
-      transSource.removeFeature(transSource.getFeatures()[0]);
-    }
-  });
-  map.addLayer(transLayer);
-  map.addInteraction(transDraw);
-}
-
-export function clearTransportLocate() {
-  map.removeInteraction(transDraw);
-  isDrawing = false;
-}
-
 export function drawTransportLocate() {
   isDrawing = true;
   map.removeLayer(transLayer);
@@ -360,6 +343,11 @@ export function getTransportPoint() {
   } else {
     return null;
   }
+}
+
+export function clearTransportLocate() {
+  map.removeInteraction(transDraw);
+  isDrawing = false;
 }
 
 export function clearXiaoqu() {

@@ -1,7 +1,7 @@
 /*
  * @Author: 小田
  * @Date: 2021-05-31 13:24:12
- * @LastEditTime: 2021-06-05 18:50:51
+ * @LastEditTime: 2021-06-07 19:47:35
  */
 
 // jQuery
@@ -21,25 +21,18 @@ import {
 import { getPriceRange, showInfo, updateChart, getTransportRange } from "./ui";
 import { transform } from "ol/proj";
 
+// server url configs
 const url = "https://house.xiaotianxt.cn";
 const search_url = url + "/search";
+
+// search results
 export const searchPanel = $("#search-result-panel"); // 结果记录位置
 export var searchResults; // 小区搜索结果
 
 import olpjch from "ol-proj-ch";
-/* GCJ02 */
-const GCJ02 = olpjch.GCJ02;
-const code = GCJ02.CODE;
+const code = olpjch.GCJ02.CODE;
 
-export const priceFormatter = function (price) {
-  if (price >= 1000) {
-    return Math.round(price / 1000).toString() + "k";
-  } else {
-    return "暂无";
-  }
-};
-
-export function xiaoquSearch(e) {
+export function simpleNameSearch(e) {
   e.preventDefault();
   showList();
   var xiaoqu = $("#xiaoqu-locate input").val();
@@ -60,12 +53,67 @@ export function xiaoquSearch(e) {
     .then(solveResult);
 }
 
+export function advancedSearch(e) {
+  e.preventDefault();
+  showList();
+  var multipolygon = getMultiPolygon();
+  var price = getPriceRange();
+  var transport = getTransportRange();
+
+  var data = {
+    polygon: multipolygon,
+    price: price,
+    transport: transport,
+    type: "advanced",
+  };
+  // console.log(data);
+  fetch(search_url, {
+    mode: "cors",
+    method: "post",
+    body: JSON.stringify(data),
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
+  })
+    .then((response) => response.json())
+    .then(solveResult);
+}
+
+export function priceSearch(item) {
+  var data = {
+    item: item.properties,
+    type: "prices",
+  };
+  // console.log(JSON.stringify(item));
+  return fetch(search_url, {
+    mode: "cors",
+    method: "post",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => response.json())
+    .then((js) => {
+      updateChart(js);
+    });
+}
+
+function priceFormatter(price) {
+  if (price >= 1000) {
+    return Math.round(price / 1000).toString() + "k";
+  } else {
+    return "暂无";
+  }
+}
+
 function showList() {
   var firstpage = $(".carousel-item").eq(0);
   if (!firstpage.hasClass("active")) {
     $("#info-prev").trigger("click");
   }
 }
+
 function insertOneItem(element, index) {
   var $elem = $(
     `
@@ -101,34 +149,8 @@ function insertOneItem(element, index) {
   searchPanel.append($elem);
 }
 
-function insertItem(js) {
+function insertItems(js) {
   js.forEach((element, index) => insertOneItem(element, index));
-}
-
-export function advancedSearch(e) {
-  e.preventDefault();
-  showList();
-  var multipolygon = getMultiPolygon();
-  var price = getPriceRange();
-  var transport = getTransportRange();
-
-  var data = {
-    polygon: multipolygon,
-    price: price,
-    transport: transport,
-    type: "advanced",
-  };
-  // console.log(data);
-  fetch(search_url, {
-    mode: "cors",
-    method: "post",
-    body: JSON.stringify(data),
-    headers: {
-      "Content-Type": "application/json;charset=utf-8",
-    },
-  })
-    .then((response) => response.json())
-    .then(solveResult);
 }
 
 function solveResult(js) {
@@ -140,31 +162,5 @@ function solveResult(js) {
     $("#result-button").trigger("click");
   }
 
-  insertItem(js);
-}
-
-export function polygonSearch(polygons) {
-  polygons.forEach((item) => {
-    // console.log(item);
-  });
-}
-
-export function getPrice(item) {
-  var data = {
-    item: item.properties,
-    type: "prices",
-  };
-  // console.log(JSON.stringify(item));
-  return fetch(search_url, {
-    mode: "cors",
-    method: "post",
-    headers: {
-      "Content-Type": "application/json;charset=utf-8",
-    },
-    body: JSON.stringify(data),
-  })
-    .then((response) => response.json())
-    .then((js) => {
-      updateChart(js);
-    });
+  insertItems(js);
 }
