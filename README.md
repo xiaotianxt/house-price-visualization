@@ -41,7 +41,8 @@
 
 ### 数据库部署
 
-基于[@jumper2014](https://github.com/jumper2014)开发的[链家网爬虫](https://github.com/jumper2014/lianjia-beike-spider), 爬取小区数据并存储在mongodb中.
+基于[@jumper2014](https://github.com/jumper2014)开发的[链家网爬虫](https://github.com/jumper2014/lianjia-beike-spider), 爬取小区数据并存储在mongodb中,
+使用高德地理逆编码API，将小区地址解析为火星坐标系地理坐标.
 
 ## 作者
 
