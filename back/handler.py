@@ -1,10 +1,9 @@
 '''
 Author: 小田
 Date: 2021-05-19 21:00:00
-LastEditTime: 2021-06-05 16:34:44
+LastEditTime: 2021-06-17 20:08:43
 '''
 
-from geometry import *
 from db import *
 import json
 from bson import ObjectId
@@ -19,11 +18,7 @@ class JSONEncoder(json.JSONEncoder):
 
 class RequestHandler():
     def __init__(self) -> None:
-        self.db = db()
-
-    def query_within_polygon(self, polygon):
-        print(list(self.db.location_geo_within(polygon)))
-        return json.dumps(list(self.db.location_geo_within(polygon)), cls=JSONEncoder)
+        self.db = DBHandler()
 
     def query_within_xiaoqu_name(self, xiaoqu):
         return json.dumps(list(self.db.xiaoqu_name(xiaoqu)), cls=JSONEncoder)
