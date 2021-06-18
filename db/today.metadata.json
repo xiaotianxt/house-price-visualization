@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"},{"v":{"$numberInt":"2"},"key":{"geometry":"2dsphere"},"name":"geometry_2dsphere","2dsphereIndexVersion":{"$numberInt":"3"}}],"uuid":"edde5d4315bb45c994f8539efb5341c8","collectionName":"today"}
