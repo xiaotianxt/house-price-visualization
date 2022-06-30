@@ -22,7 +22,7 @@ import { getPriceRange, showInfo, updateChart, getTransportRange } from "./ui";
 import { transform } from "ol/proj";
 
 // server url configs
-const url = "https://house.xiaotianxt.cn";
+const url = "https://house.xiaotianxt.com";
 const search_url = url + "/search";
 
 // search results
