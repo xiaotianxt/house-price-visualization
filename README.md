@@ -4,7 +4,7 @@
 [![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs)
 基于链家小区二手房月成交价格, 可视化展示房屋价格走势, 支持多种方式查询.
 
-在线查看[house.xiaotianxt.cn](https://house.xiaotianxt.cn)
+在线查看[house.xiaotianxt.com](https://house.xiaotianxt.com)
 ## 运行截图
 
 ![使用截图](https://tva1.sinaimg.cn/large/008i3skNly1gr9kanmu8aj31dd0u0kjr.jpg)
